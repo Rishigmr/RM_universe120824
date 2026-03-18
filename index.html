@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rishiverse</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:radial-gradient(circle,#0f2027,#000);
+  font-family:Arial;
+  color:white;
+}
+.box{
+  width:330px;
+  background:#111;
+  padding:25px;
+  border-radius:18px;
+  box-shadow:0 0 40px cyan;
+  text-align:center;
+}
+input{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  border:none;
+}
+button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  background:#00e5ff;
+  cursor:pointer;
+}
+button:hover{background:#18ffff;}
+.google{background:#4285F4;}
+.hidden{display:none;}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+<h2 id="title">Rishiverse</h2>
+
+<!-- MENU -->
+<div id="menu">
+  <button onclick="showSignup()">Sign Up</button>
+  <button onclick="showLogin()">Login</button>
+  <button class="google" onclick="googleLogin()">Google Login</button>
+</div>
+
+<!-- SIGNUP -->
+<div id="signupBox" class="hidden">
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="signup()">Create Account</button>
+</div>
+
+<!-- LOGIN -->
+<div id="loginBox" class="hidden">
+  <input id="loginEmail" placeholder="Email">
+  <input id="loginPass" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "PASTE_YOUR_KEY",
+  authDomain: "PASTE_YOUR_DOMAIN",
+  projectId: "PASTE_PROJECT_ID",
+  appId: "PASTE_APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+function showSignup(){
+  menu.classList.add("hidden");
+  signupBox.classList.remove("hidden");
+}
+
+function showLogin(){
+  menu.classList.add("hidden");
+  loginBox.classList.remove("hidden");
+}
+
+function signup(){
+  auth.createUserWithEmailAndPassword(email.value,password.value)
+  .then(()=>{
+    alert("Account Created");
+    window.location.href="dashboard.html";
+  })
+  .catch(e=>alert(e.message));
+}
+
+function login(){
+  auth.signInWithEmailAndPassword(loginEmail.value,loginPass.value)
+  .then(()=>{
+    window.location.href="dashboard.html";
+  })
+  .catch(e=>alert(e.message));
+}
+
+function googleLogin(){
+  const p=new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(p)
+  .then(()=>{
+    window.location.href="dashboard.html";
+  })
+  .catch(e=>alert(e.message));
+}
+</script>
+
+</body>
+</html>
