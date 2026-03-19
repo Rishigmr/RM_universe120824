@@ -1,49 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>RM Warzone</title>
-<style>h1{
+
+<style>
+body{
+  margin:0;
+  overflow:hidden;
+  background:radial-gradient(circle,#000,#1a0000);
+}
+
+h1{
   position:absolute;
   top:10px;
   left:50%;
   transform:translateX(-50%);
   color:red;
-  text-shadow:0 0 20px red,0 0 40px orange;
 }
-body{
-  margin:0;
-  background:radial-gradient(circle,#000000,#1a0000);
-  overflow:hidden;
-}
-<h1>🔥 RM WARZONE 🔥</h1>
-  margin:0;
-  background:black;
-  overflow:hidden;
-  color:white;
-  font-family:Arial;
-}
+
 #score{
   position:absolute;
   top:10px;
   left:10px;
-  colour:white;
-  font-size:18px;
+  color:white;
 }
-canvas{
-  display:block;
+
+#life{
+  position:absolute;
+  top:30px;
+  left:10px;
+  color:white;
 }
 </style>
 </head>
+
 <body>
 
+<h1>🔥 RM WARZONE 🔥</h1>
 <div id="score">Score: 0</div>
-<div id="life">Life: 3</div> 
+<div id="life">Life: 3</div>
+
 <canvas id="game"></canvas>
 
 <script>
 let c=document.getElementById("game");
-document.getElementById("life").innerText="Life: "+life;
 let ctx=c.getContext("2d");
+
 c.width=window.innerWidth;
 c.height=window.innerHeight;
 
@@ -51,17 +54,17 @@ let player={x:200,y:200,size:20};
 let bullets=[];
 let enemies=[];
 let score=0;
-let life = 3;
+let life=3;
 
 // SHOOT
 window.onclick=()=>{
-  bullets.push({x:player.x,y:player.y});
+  bullets.push({x:player.x+10,y:player.y});
 };
 
 // MOVE PLAYER
 window.onmousemove=(e)=>{
-  player.x=e.x;
-  player.y=e.y;
+  player.x=e.clientX;
+  player.y=e.clientY;
 };
 
 // SPAWN ENEMY
@@ -71,59 +74,60 @@ setInterval(()=>{
     y:0,
     size:20
   });
-},800);
+},1000);
 
 // GAME LOOP
-function game(){
-  ctx.fillStyle="black";
-  ctx.fillRect(0,0,c.width,c.height);
+function update(){
+  ctx.clearRect(0,0,c.width,c.height);
 
-  // player
-ctx.fillStyle="cyan";
-ctx.shadowColor="cyan";
-ctx.shadowBlur=20;
+  // PLAYER
+  ctx.fillStyle="cyan";
+  ctx.fillRect(player.x,player.y,player.size,player.size);
 
-ctx.fillRect(player.x,player.y,player.size,player.size);
-
-ctx.shadowBlur=0;
-
-  // bullets
+  // BULLETS
   ctx.fillStyle="yellow";
   bullets.forEach((b,i)=>{
-    b.y-=6;
+    b.y-=5;
     ctx.fillRect(b.x,b.y,5,10);
   });
 
-  // enemies
-  ctx.fillStyle="red";
-ctx.shadowColor="red";
-ctx.shadowBlur=20;
+  // ENEMIES
+  enemies.forEach((e,i)=>{
+    e.y+=2;
+    ctx.fillStyle="red";
+    ctx.fillRect(e.x,e.y,e.size,e.size);
 
-ctx.fillRect(e.x,e.y,e.size,e.size);
-
-ctx.shadowBlur=0;
-
-    bullets.forEach((b,bi)=>{
-      if(Math.abs(b.x-e.x)<20 && Math.abs(b.y-e.y)<20){life--;
-      if(life <= 0){
-  alert("💀 GAME OVER");
-  location.reload();
-}
+    // COLLISION WITH PLAYER
+    if(Math.abs(player.x-e.x)<20 && Math.abs(player.y-e.y)<20){
+      life--;
       enemies.splice(i,1);
-        enemies.splice(ei,1);
+    }
+
+    // BULLET HIT
+    bullets.forEach((b,bi)=>{
+      if(Math.abs(b.x-e.x)<20 && Math.abs(b.y-e.y)<20){
+        enemies.splice(i,1);
         bullets.splice(bi,1);
         score++;
-        document.getElementById("score").innerText="Score: "+score;
       }
     });
   });
 
-  requestAnimationFrame(game);
+  // UPDATE UI
+  document.getElementById("score").innerText="Score: "+score;
+  document.getElementById("life").innerText="Life: "+life;
+
+  // GAME OVER
+  if(life<=0){
+    alert("💀 GAME OVER");
+    location.reload();
+  }
+
+  requestAnimationFrame(update);
 }
 
-game();
+update();
 </script>
 
 </body>
-
 </html>
