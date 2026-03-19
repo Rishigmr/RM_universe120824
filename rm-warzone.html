@@ -7,131 +7,181 @@
 <style>
 body{
   margin:0;
+  font-family:Arial;
+  color:white;
   overflow:hidden;
-  background:radial-gradient(circle,#000,#1a0000);
 }
 
-h1{
-  position:absolute;
-  top:10px;
-  left:50%;
-  transform:translateX(-50%);
+/* BACKGROUND */
+#bg{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:linear-gradient(to bottom,#000000,#220000);
+  z-index:-1;
+}
+
+/* LOGO */
+#logo{
+  font-size:40px;
+  text-align:center;
+  margin-top:40px;
   color:red;
+  text-shadow:0 0 30px red;
 }
 
-#score{
-  position:absolute;
-  top:10px;
-  left:10px;
-  color:white;
+/* MENU */
+#menu{
+  text-align:center;
+  margin-top:40px;
 }
 
-#life{
-  position:absolute;
-  top:30px;
-  left:10px;
+button{
+  padding:12px 20px;
+  margin:10px;
+  border:none;
+  border-radius:10px;
+  background:red;
   color:white;
+  font-size:18px;
+  cursor:pointer;
+}
+
+button:hover{
+  background:darkred;
+}
+
+/* GAME UI */
+#gameUI{
+  display:none;
+}
+
+.box{
+  position:absolute;
+  background:rgba(0,0,0,0.7);
+  padding:10px 20px;
+  border-radius:10px;
+  border:1px solid red;
+}
+
+#score{ top:10px; left:10px; }
+#life{ top:10px; right:10px; }
+
+canvas{
+  display:block;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🔥 RM WARZONE 🔥</h1>
-<div id="score">Score: 0</div>
-<div id="life">Life: 3</div>
+<div id="bg"></div>
 
-<canvas id="game"></canvas>
+<!-- LOGO -->
+<div id="logo">🔥 RM WARZONE 🔥</div>
+
+<!-- MENU -->
+<div id="menu">
+  <button onclick="startGame()">▶ PLAY</button>
+  <button disabled>👥 Play With Friends (soon)</button>
+  <button disabled>🌐 Create Room (soon)</button>
+</div>
+
+<!-- GAME -->
+<div id="gameUI">
+  <div id="score" class="box">Score: 0</div>
+  <div id="life" class="box">Life: 3</div>
+  <canvas id="game"></canvas>
+</div>
 
 <script>
-let c=document.getElementById("game");
-let ctx=c.getContext("2d");
+let c,ctx;
+let player,bullets,enemies;
+let scoreVal=0,lifeVal=3;
 
-c.width=window.innerWidth;
-c.height=window.innerHeight;
+function startGame(){
+  menu.style.display="none";
+  logo.style.display="none";
+  gameUI.style.display="block";
 
-let player={x:200,y:200,size:20};
-let bullets=[];
-let enemies=[];
-let score=0;
-let life=3;
+  c=document.getElementById("game");
+  ctx=c.getContext("2d");
 
-// SHOOT
-window.onclick=()=>{
-  bullets.push({x:player.x+10,y:player.y});
-};
+  c.width=window.innerWidth;
+  c.height=window.innerHeight;
 
-// MOVE PLAYER
-window.onmousemove=(e)=>{
-  player.x=e.clientX;
-  player.y=e.clientY;
-};
+  player={x:200,y:200,size:20};
+  bullets=[];
+  enemies=[];
+  scoreVal=0;
+  lifeVal=3;
 
-// SPAWN ENEMY
-setInterval(()=>{
-  enemies.push({
-    x:Math.random()*c.width,
-    y:0,
-    size:20
-  });
-},1000);
+  window.onmousemove=(e)=>{
+    player.x=e.clientX;
+    player.y=e.clientY;
+  };
 
-// GAME LOOP
+  window.onclick=()=>{
+    bullets.push({x:player.x+10,y:player.y});
+  };
+
+  setInterval(()=>{
+    enemies.push({
+      x:Math.random()*c.width,
+      y:0,
+      size:20
+    });
+  },1000);
+
+  update();
+}
+
 function update(){
   ctx.clearRect(0,0,c.width,c.height);
 
   // PLAYER
   ctx.fillStyle="cyan";
-  ctx.fillRect(player.x,player.y,player.size,player.size);
+  ctx.fillRect(player.x,player.y,20,20);
 
   // BULLETS
   ctx.fillStyle="yellow";
   bullets.forEach((b,i)=>{
-    b.y-=5;
+    b.y-=6;
     ctx.fillRect(b.x,b.y,5,10);
   });
 
   // ENEMIES
   enemies.forEach((e,i)=>{
-    e.y+=2;
+    e.y+=3;
     ctx.fillStyle="red";
-    ctx.fillRect(e.x,e.y,e.size,e.size);
+    ctx.fillRect(e.x,e.y,20,20);
 
-    // COLLISION WITH PLAYER
     if(Math.abs(player.x-e.x)<20 && Math.abs(player.y-e.y)<20){
-      life--;
+      lifeVal--;
       enemies.splice(i,1);
     }
 
-    // BULLET HIT
     bullets.forEach((b,bi)=>{
       if(Math.abs(b.x-e.x)<20 && Math.abs(b.y-e.y)<20){
         enemies.splice(i,1);
         bullets.splice(bi,1);
-        score++;
+        scoreVal++;
       }
     });
   });
 
-  // UPDATE UI
-  document.getElementById("score").innerText="Score: "+score;
-  document.getElementById("life").innerText="Life: "+life;
+  // UI UPDATE
+  document.getElementById("score").innerText="Score: "+scoreVal;
+  document.getElementById("life").innerText="Life: "+lifeVal;
 
-  // GAME OVER
-  if(life<=0){
+  if(lifeVal<=0){
     alert("💀 GAME OVER");
     location.reload();
   }
 
   requestAnimationFrame(update);
 }
-
-update();
 </script>
 
 </body>
 </html>
-
-
-
-
