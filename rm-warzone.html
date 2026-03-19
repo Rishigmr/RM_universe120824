@@ -37,10 +37,12 @@ canvas{
 <body>
 
 <div id="score">Score: 0</div>
+<div id="life">Life: 3</div> 
 <canvas id="game"></canvas>
 
 <script>
 let c=document.getElementById("game");
+document.getElementById("life").innerText="Life: "+life;
 let ctx=c.getContext("2d");
 c.width=window.innerWidth;
 c.height=window.innerHeight;
@@ -49,6 +51,7 @@ let player={x:200,y:200,size:20};
 let bullets=[];
 let enemies=[];
 let score=0;
+let life = 3;
 
 // SHOOT
 window.onclick=()=>{
@@ -101,7 +104,12 @@ ctx.fillRect(e.x,e.y,e.size,e.size);
 ctx.shadowBlur=0;
 
     bullets.forEach((b,bi)=>{
-      if(Math.abs(b.x-e.x)<20 && Math.abs(b.y-e.y)<20){
+      if(Math.abs(b.x-e.x)<20 && Math.abs(b.y-e.y)<20){life--;
+      if(life <= 0){
+  alert("💀 GAME OVER");
+  location.reload();
+}
+      enemies.splice(i,1);
         enemies.splice(ei,1);
         bullets.splice(bi,1);
         score++;
