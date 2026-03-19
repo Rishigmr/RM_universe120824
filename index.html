@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Rishiverse</title>
 
+<!-- Firebase CDN -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
@@ -51,23 +52,20 @@ button:hover{background:#18ffff;}
 <body>
 
 <div class="box">
-<h2 id="title">Rishiverse</h2>
+<h2>Rishiverse</h2>
 
-<!-- MENU -->
 <div id="menu">
   <button onclick="showSignup()">Sign Up</button>
   <button onclick="showLogin()">Login</button>
   <button class="google" onclick="googleLogin()">Google Login</button>
 </div>
 
-<!-- SIGNUP -->
 <div id="signupBox" class="hidden">
   <input id="email" placeholder="Email">
   <input id="password" type="password" placeholder="Password">
   <button onclick="signup()">Create Account</button>
 </div>
 
-<!-- LOGIN -->
 <div id="loginBox" class="hidden">
   <input id="loginEmail" placeholder="Email">
   <input id="loginPass" type="password" placeholder="Password">
@@ -78,10 +76,10 @@ button:hover{background:#18ffff;}
 
 <script>
 const firebaseConfig = {
-  apiKey: "PASTE_YOUR_KEY",
-  authDomain: "PASTE_YOUR_DOMAIN",
-  projectId: "PASTE_PROJECT_ID",
-  appId: "PASTE_APP_ID"
+  apiKey: "AIzaSyArnIKZ8odykhlwMDBjXVOyTOpCXXFnNBk",
+  authDomain: "rmuniverse120824.firebaseapp.com",
+  projectId: "rmuniverse120824",
+  appId: "1:338852799104:web:1dc2b2fb99e84db9503c65"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -100,7 +98,6 @@ function showLogin(){
 function signup(){
   auth.createUserWithEmailAndPassword(email.value,password.value)
   .then(()=>{
-    alert("Account Created");
     window.location.href="dashboard.html";
   })
   .catch(e=>alert(e.message));
@@ -115,13 +112,14 @@ function login(){
 }
 
 function googleLogin(){
-  const p=new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(p)
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider)
   .then(()=>{
     window.location.href="dashboard.html";
   })
   .catch(e=>alert(e.message));
 }
 </script>
+
 </body>
 </html>
