@@ -1,1 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>RM Warzone</title>
+<style>
+body{
+  margin:0;
+  background:black;
+  overflow:hidden;
+  color:white;
+  font-family:Arial;
+}
+#score{
+  position:absolute;
+  top:10px;
+  left:10px;
+}
+canvas{
+  display:block;
+}
+</style>
+</head>
+<body>
 
+<div id="score">Score: 0</div>
+<canvas id="game"></canvas>
+
+<script>
+let c=document.getElementById("game");
+let ctx=c.getContext("2d");
+c.width=window.innerWidth;
+c.height=window.innerHeight;
+
+let player={x:200,y:200,size:20};
+let bullets=[];
+let enemies=[];
+let score=0;
+
+// SHOOT
+window.onclick=()=>{
+  bullets.push({x:player.x,y:player.y});
+};
+
+// MOVE PLAYER
+window.onmousemove=(e)=>{
+  player.x=e.x;
+  player.y=e.y;
+};
+
+// SPAWN ENEMY
+setInterval(()=>{
+  enemies.push({
+    x:Math.random()*c.width,
+    y:0,
+    size:20
+  });
+},800);
+
+// GAME LOOP
+function game(){
+  ctx.fillStyle="black";
+  ctx.fillRect(0,0,c.width,c.height);
+
+  // player
+  ctx.fillStyle="cyan";
+  ctx.fillRect(player.x,player.y,20,20);
+
+  // bullets
+  ctx.fillStyle="yellow";
+  bullets.forEach((b,i)=>{
+    b.y-=6;
+    ctx.fillRect(b.x,b.y,5,10);
+  });
+
+  // enemies
+  ctx.fillStyle="red";
+  enemies.forEach((e,ei)=>{
+    e.y+=2;
+    ctx.fillRect(e.x,e.y,20,20);
+
+    bullets.forEach((b,bi)=>{
+      if(Math.abs(b.x-e.x)<20 && Math.abs(b.y-e.y)<20){
+        enemies.splice(ei,1);
+        bullets.splice(bi,1);
+        score++;
+        document.getElementById("score").innerText="Score: "+score;
+      }
+    });
+  });
+
+  requestAnimationFrame(game);
+}
+
+game();
+</script>
+
+</body>
+</html>
