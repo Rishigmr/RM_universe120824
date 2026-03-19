@@ -2,8 +2,19 @@
 <html>
 <head>
 <title>RM Warzone</title>
-<style>
+<style>h1{
+  position:absolute;
+  top:10px;
+  left:50%;
+  transform:translateX(-50%);
+  color:red;
+  text-shadow:0 0 20px red,0 0 40px orange;
+}
 body{
+  margin:0;
+  background:radial-gradient(circle,#000000,#1a0000);
+  overflow:hidden;
+}
 <h1>🔥 RM WARZONE 🔥</h1>
   margin:0;
   background:black;
@@ -15,6 +26,8 @@ body{
   position:absolute;
   top:10px;
   left:10px;
+  colour:white;
+  font-size:18px;
 }
 canvas{
   display:block;
@@ -63,8 +76,13 @@ function game(){
   ctx.fillRect(0,0,c.width,c.height);
 
   // player
-  ctx.fillStyle="cyan";
-  ctx.fillRect(player.x,player.y,20,20);
+ctx.fillStyle="cyan";
+ctx.shadowColor="cyan";
+ctx.shadowBlur=20;
+
+ctx.fillRect(player.x,player.y,player.size,player.size);
+
+ctx.shadowBlur=0;
 
   // bullets
   ctx.fillStyle="yellow";
@@ -75,9 +93,12 @@ function game(){
 
   // enemies
   ctx.fillStyle="red";
-  enemies.forEach((e,ei)=>{
-    e.y+=2;
-    ctx.fillRect(e.x,e.y,20,20);
+ctx.shadowColor="red";
+ctx.shadowBlur=20;
+
+ctx.fillRect(e.x,e.y,e.size,e.size);
+
+ctx.shadowBlur=0;
 
     bullets.forEach((b,bi)=>{
       if(Math.abs(b.x-e.x)<20 && Math.abs(b.y-e.y)<20){
@@ -96,4 +117,5 @@ game();
 </script>
 
 </body>
+
 </html>
