@@ -1,33 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Rishiverse Dashboard</title>
+<meta charset="UTF-8">
+<title>RM Warzone Lobby</title>
+
 <style>
 body{
-  background:#000;
-  color:white;
+  margin:0;
   font-family:Arial;
+  background:linear-gradient(#000,#1a0000);
+  color:white;
   text-align:center;
 }
+
+/* LOGO */
+#logo{
+  font-size:40px;
+  margin-top:50px;
+  color:red;
+  text-shadow:0 0 30px red;
+}
+
+/* BUTTON */
 button{
-  padding:12px;
-  margin:10px;
+  padding:15px 30px;
+  margin-top:50px;
+  font-size:20px;
   border:none;
-  border-radius:8px;
-  background:#00e5ff;
+  border-radius:10px;
+  background:red;
+  color:white;
   cursor:pointer;
+}
+
+button:hover{
+  background:darkred;
+}
+
+/* LOADING */
+#loading{
+  display:none;
+  margin-top:30px;
+  font-size:18px;
 }
 </style>
 </head>
+
 <body>
 
-<h1>🎮 Welcome to Rishiverse</h1>
+<div id="logo">🔥 RM WARZONE 🔥</div>
 
-<button onclick="openGame()">🔥 Play RM Warzone</button>
+<button onclick="startMatch()">▶ PLAY</button>
+
+<div id="loading">🔍 Finding Players...</div>
 
 <script>
-function openGame(){
-  window.location.href="rm-warzone.html";
+function startMatch(){
+  document.querySelector("button").style.display="none";
+  document.getElementById("loading").style.display="block";
+
+  // fake matchmaking delay
+  setTimeout(()=>{
+    window.location.href="rm-warzone.html";
+  },3000);
 }
 </script>
 
