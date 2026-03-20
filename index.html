@@ -4,27 +4,25 @@
 <meta charset="UTF-8">
 <title>RM Warzone Login</title>
 
-<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <style>
 body{
   margin:0;
   font-family:Arial;
-  background:url('https://wallpaperaccess.com/full/31193.jpg') no-repeat center/cover;
+  background:url('logo.png') no-repeat center/cover;
 }
 
-/* OVERLAY */
 #overlay{
   position:fixed;
   width:100%;
   height:100%;
-  background:rgba(0,0,0,0.6);
+  background:rgba(0,0,0,0.7);
 }
 
-/* CENTER */
-#loginBox{
+#box{
   position:absolute;
   top:50%;
   left:50%;
@@ -33,26 +31,26 @@ body{
   color:white;
 }
 
-#logo{
-  font-size:40px;
-  margin-bottom:30px;
-  color:gold;
-  text-shadow:0 0 20px gold;
+input{
+  display:block;
+  width:250px;
+  padding:10px;
+  margin:10px auto;
+  border-radius:8px;
+  border:none;
 }
 
 button{
   display:block;
-  width:250px;
+  width:260px;
   padding:12px;
   margin:10px auto;
-  font-size:16px;
   border:none;
   border-radius:8px;
   cursor:pointer;
 }
 
-.google{ background:#4285F4; color:white; }
-.guest{ background:white; }
+.google{background:#4285F4;color:white;}
 </style>
 </head>
 
@@ -60,15 +58,19 @@ button{
 
 <div id="overlay"></div>
 
-<div id="loginBox">
-<img src="logo.png" style="width:250px; margin-bottom:20px;">
+<div id="box">
+  <img src="logo.png" style="width:220px;"><br>
 
-  <button class="google" onclick="googleLogin()">Sign in with Google</button>
-  <button class="guest" onclick="guestLogin()">Guest</button>
+  <input id="username" placeholder="Username">
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password (min 6)">
+
+  <button onclick="signup()">Sign Up</button>
+  <button class="google" onclick="googleLogin()">Google Login</button>
+  <button onclick="guestLogin()">Guest Login</button>
 </div>
 
 <script>
-// 🔥 FIREBASE CONFIG (tera wala same)
 const firebaseConfig = {
   apiKey: "AIzaSyArnIKZ8odykhlwMDBjXVOyTOpCXXFnNBk",
   authDomain: "rmuniverse120824.firebaseapp.com",
@@ -78,24 +80,65 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+const db = firebase.firestore();
 
-// GOOGLE LOGIN
-function googleLogin(){
-  const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider)
-  .then(()=>{
-    window.location.href="lobby.html";
-  })
-  .catch(e=>alert(e.message));
+function signup(){
+  let u=username.value;
+  let e=email.value;
+  let p=password.value;
+
+  if(p.length<6){
+    alert("Password must be 6+");
+    return;
+  }
+
+  db.collection("users").where("username","==",u).get()
+  .then(snap=>{
+    if(!snap.empty){
+      alert("Username already taken ❌");
+    }else{
+      auth.createUserWithEmailAndPassword(e,p)
+      .then(res=>{
+        db.collection("users").doc(res.user.uid).set({
+          username:u,
+          coins:500,
+          gems:10
+        });
+        window.location.href="lobby.html";
+      });
+    }
+  });
 }
 
-// GUEST LOGIN
+function googleLogin(){
+  let provider=new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider)
+  .then(res=>{
+    let uid=res.user.uid;
+
+    db.collection("users").doc(uid).get().then(doc=>{
+      if(!doc.exists){
+        db.collection("users").doc(uid).set({
+          username:"Player"+Math.floor(Math.random()*1000),
+          coins:500,
+          gems:10
+        });
+      }
+      window.location.href="lobby.html";
+    });
+  });
+}
+
 function guestLogin(){
-  auth.signInAnonymously()
-  .then(()=>{
+  auth.signInAnonymously().then(res=>{
+    let uid=res.user.uid;
+    db.collection("users").doc(uid).set({
+      username:"Guest"+Math.floor(Math.random()*1000),
+      coins:200,
+      gems:0
+    });
     window.location.href="lobby.html";
-  })
-  .catch(e=>alert(e.message));
+  });
 }
 </script>
 
