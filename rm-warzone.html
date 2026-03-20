@@ -8,43 +8,56 @@
 body{
   margin:0;
   overflow:hidden;
-  background:linear-gradient(#000,#330000);
+  background:radial-gradient(circle,#000,#220000);
 }
 
 /* UI */
-#hp,#coins{
+#hpBar{
   position:absolute;
-  padding:10px 15px;
-  background:rgba(0,0,0,0.6);
-  color:white;
-  border-radius:10px;
+  top:10px;
+  left:10px;
+  width:200px;
+  height:20px;
+  background:red;
 }
 
-#hp{ top:10px; left:10px; }
-#coins{ top:50px; left:10px; }
+#hpFill{
+  height:100%;
+  background:lime;
+  width:100%;
+}
 
-/* HEAL BUTTON */
-#heal{
+#coins{
   position:absolute;
-  bottom:30px;
-  left:30px;
-  padding:12px 20px;
-  background:green;
+  top:40px;
+  left:10px;
   color:white;
-  border:none;
+}
+
+/* SKILLS */
+.skill{
+  position:absolute;
+  bottom:20px;
+  padding:10px;
+  background:black;
+  color:white;
   border-radius:10px;
   cursor:pointer;
 }
 
-/* GAME OVER */
+#s1{left:20px;}
+#s2{left:120px;}
+#s3{left:220px;}
+#s4{left:320px;}
+
 #over{
   display:none;
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  background:black;
   color:white;
+  background:black;
   padding:20px;
 }
 </style>
@@ -52,14 +65,17 @@ body{
 
 <body>
 
-<div id="hp">❤️ HP: 1000</div>
-<div id="coins">🪙 Coins: 0</div>
+<div id="hpBar"><div id="hpFill"></div></div>
+<div id="coins">Coins: 0</div>
 
-<button id="heal" onclick="heal()">🧪 Use Chemical</button>
+<div id="s1" class="skill" onclick="blast()">🔥</div>
+<div id="s2" class="skill" onclick="shield()">🛡</div>
+<div id="s3" class="skill" onclick="speed()">⚡</div>
+<div id="s4" class="skill" onclick="rage()">💀</div>
 
 <div id="over">
-  <h2>GAME OVER</h2>
-  <button onclick="location.reload()">Restart</button>
+<h2>GAME OVER</h2>
+<button onclick="location.reload()">Restart</button>
 </div>
 
 <canvas id="game"></canvas>
@@ -71,16 +87,22 @@ let ctx=c.getContext("2d");
 c.width=window.innerWidth;
 c.height=window.innerHeight;
 
-let player={x:200,y:500};
+let player={x:200,y:500,size:40};
 let bullets=[];
 let enemies=[];
+let explosions=[];
 
 let hp=1000;
+let maxHp=1000;
 let coins=100;
+
+let speedBoost=false;
+let shieldOn=false;
+let rageOn=false;
 
 // SHOOT
 setInterval(()=>{
-  bullets.push({x:player.x+10,y:player.y});
+  bullets.push({x:player.x+15,y:player.y});
 },300);
 
 // MOVE
@@ -88,20 +110,20 @@ window.onmousemove=(e)=>{
   player.x=e.clientX;
 };
 
-// ENEMY SPAWN
+// ENEMY
 setInterval(()=>{
-  enemies.push({
-    x:Math.random()*c.width,
-    y:0
-  });
+  enemies.push({x:Math.random()*c.width,y:0});
 },1000);
 
 function update(){
   ctx.clearRect(0,0,c.width,c.height);
 
-  // PLAYER
+  // PLAYER (GLOW)
+  ctx.shadowBlur=20;
+  ctx.shadowColor="cyan";
   ctx.fillStyle="cyan";
   ctx.fillRect(player.x,player.y,40,40);
+  ctx.shadowBlur=0;
 
   // BULLETS
   ctx.fillStyle="yellow";
@@ -118,7 +140,7 @@ function update(){
 
     // DAMAGE
     if(Math.abs(player.x-e.x)<30 && Math.abs(player.y-e.y)<30){
-      hp-=50;
+      hp -= shieldOn ? 10 : 50;
       enemies.splice(i,1);
     }
 
@@ -127,16 +149,25 @@ function update(){
       if(Math.abs(b.x-e.x)<25 && Math.abs(b.y-e.y)<25){
         enemies.splice(i,1);
         bullets.splice(bi,1);
-        coins+=10;
+        coins += rageOn ? 20 : 10;
+
+        explosions.push({x:e.x,y:e.y,size:20});
       }
     });
   });
 
-  // UPDATE UI
-  document.getElementById("hp").innerText="❤️ HP: "+hp;
-  document.getElementById("coins").innerText="🪙 Coins: "+coins;
+  // EXPLOSION
+  explosions.forEach((ex,i)=>{
+    ex.size+=2;
+    ctx.fillStyle="orange";
+    ctx.fillRect(ex.x,ex.y,ex.size,ex.size);
+    if(ex.size>40) explosions.splice(i,1);
+  });
 
-  // GAME OVER
+  // HP BAR
+  document.getElementById("hpFill").style.width=(hp/maxHp*100)+"%";
+  document.getElementById("coins").innerText="Coins: "+coins;
+
   if(hp<=0){
     document.getElementById("over").style.display="block";
     return;
@@ -145,16 +176,24 @@ function update(){
   requestAnimationFrame(update);
 }
 
-// HEAL SYSTEM
-function heal(){
-  if(coins>=50){
-    coins-=50;
-    hp+=200;
+// SKILLS
+function blast(){
+  enemies=[];
+}
 
-    if(hp>1000) hp=1000;
-  }else{
-    alert("Not enough coins ❌");
-  }
+function shield(){
+  shieldOn=true;
+  setTimeout(()=>shieldOn=false,5000);
+}
+
+function speed(){
+  speedBoost=true;
+  setTimeout(()=>speedBoost=false,5000);
+}
+
+function rage(){
+  rageOn=true;
+  setTimeout(()=>rageOn=false,5000);
 }
 
 update();
