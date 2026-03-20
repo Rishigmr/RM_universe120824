@@ -7,146 +7,106 @@
 <style>
 body{
   margin:0;
-  font-family:Arial;
-  color:white;
   overflow:hidden;
+  background:linear-gradient(#000,#220000);
 }
 
-/* BACKGROUND */
-#bg{
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:linear-gradient(to bottom,#000000,#220000);
-  z-index:-1;
-}
-
-/* LOGO */
-#logo{
-  font-size:40px;
-  text-align:center;
-  margin-top:40px;
-  color:red;
-  text-shadow:0 0 30px red;
-}
-
-/* MENU */
-#menu{
-  text-align:center;
-  margin-top:40px;
-}
-
-button{
-  padding:12px 20px;
-  margin:10px;
-  border:none;
-  border-radius:10px;
-  background:red;
-  color:white;
-  font-size:18px;
-  cursor:pointer;
-}
-
-button:hover{
-  background:darkred;
-}
-
-/* GAME UI */
-#gameUI{
-  display:none;
-}
-
-.box{
+/* UI */
+#score,#life,#coins{
   position:absolute;
-  background:rgba(0,0,0,0.7);
-  padding:10px 20px;
+  background:rgba(0,0,0,0.6);
+  padding:8px 15px;
   border-radius:10px;
-  border:1px solid red;
+  color:white;
 }
 
 #score{ top:10px; left:10px; }
 #life{ top:10px; right:10px; }
+#coins{ top:40px; left:10px; }
 
-canvas{
-  display:block;
+#gameOver{
+  display:none;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  background:black;
+  padding:30px;
+  color:white;
+  border-radius:10px;
+  text-align:center;
 }
 </style>
 </head>
 
 <body>
 
-<div id="bg"></div>
+<div id="score">Score: 0</div>
+<div id="life">Life: 3</div>
+<div id="coins">Coins: 0</div>
 
-<!-- LOGO -->
-<div id="logo">🔥 RM WARZONE 🔥</div>
-
-<!-- MENU -->
-<div id="menu">
-  <button onclick="startGame()">▶ PLAY</button>
-  <button disabled>👥 Play With Friends (soon)</button>
-  <button disabled>🌐 Create Room (soon)</button>
+<div id="gameOver">
+  <h2>💀 GAME OVER</h2>
+  <button onclick="location.reload()">Restart</button>
 </div>
 
-<!-- GAME -->
-<div id="gameUI">
-  <div id="score" class="box">Score: 0</div>
-  <div id="life" class="box">Life: 3</div>
-  <canvas id="game"></canvas>
-</div>
+<canvas id="game"></canvas>
 
 <script>
-let c,ctx;
-let player,bullets,enemies;
-let scoreVal=0,lifeVal=3;
+let c=document.getElementById("game");
+let ctx=c.getContext("2d");
 
-function startGame(){
-  menu.style.display="none";
-  logo.style.display="none";
-  gameUI.style.display="block";
+c.width=window.innerWidth;
+c.height=window.innerHeight;
 
-  c=document.getElementById("game");
-  ctx=c.getContext("2d");
+let player={x:200,y:500,size:40};
+let bullets=[];
+let enemies=[];
+let coinsArr=[];
 
-  c.width=window.innerWidth;
-  c.height=window.innerHeight;
+let score=0;
+let life=3;
+let coins=0;
 
-  player={x:200,y:200,size:20};
-  bullets=[];
-  enemies=[];
-  scoreVal=0;
-  lifeVal=3;
+// AUTO SHOOT
+setInterval(()=>{
+  bullets.push({x:player.x+15,y:player.y});
+},300);
 
-  window.onmousemove=(e)=>{
-    player.x=e.clientX;
-    player.y=e.clientY;
-  };
+// MOVE
+window.onmousemove=(e)=>{
+  player.x=e.clientX;
+};
 
-  window.onclick=()=>{
-    bullets.push({x:player.x+10,y:player.y});
-  };
+// ENEMY SPAWN
+setInterval(()=>{
+  enemies.push({
+    x:Math.random()*c.width,
+    y:0,
+    size:30
+  });
+},1000);
 
-  setInterval(()=>{
-    enemies.push({
-      x:Math.random()*c.width,
-      y:0,
-      size:20
-    });
-  },1000);
-
-  update();
-}
+// COIN SPAWN
+setInterval(()=>{
+  coinsArr.push({
+    x:Math.random()*c.width,
+    y:0,
+    size:15
+  });
+},2000);
 
 function update(){
   ctx.clearRect(0,0,c.width,c.height);
 
-  // PLAYER
+  // PLAYER (PLANE)
   ctx.fillStyle="cyan";
-  ctx.fillRect(player.x,player.y,20,20);
+  ctx.fillRect(player.x,player.y,40,40);
 
   // BULLETS
   ctx.fillStyle="yellow";
   bullets.forEach((b,i)=>{
-    b.y-=6;
+    b.y-=8;
     ctx.fillRect(b.x,b.y,5,10);
   });
 
@@ -154,33 +114,51 @@ function update(){
   enemies.forEach((e,i)=>{
     e.y+=3;
     ctx.fillStyle="red";
-    ctx.fillRect(e.x,e.y,20,20);
+    ctx.fillRect(e.x,e.y,30,30);
 
-    if(Math.abs(player.x-e.x)<20 && Math.abs(player.y-e.y)<20){
-      lifeVal--;
+    // HIT PLAYER
+    if(Math.abs(player.x-e.x)<30 && Math.abs(player.y-e.y)<30){
+      life--;
       enemies.splice(i,1);
     }
 
+    // BULLET HIT
     bullets.forEach((b,bi)=>{
-      if(Math.abs(b.x-e.x)<20 && Math.abs(b.y-e.y)<20){
+      if(Math.abs(b.x-e.x)<25 && Math.abs(b.y-e.y)<25){
         enemies.splice(i,1);
         bullets.splice(bi,1);
-        scoreVal++;
+        score+=10;
       }
     });
   });
 
-  // UI UPDATE
-  document.getElementById("score").innerText="Score: "+scoreVal;
-  document.getElementById("life").innerText="Life: "+lifeVal;
+  // COINS
+  coinsArr.forEach((co,i)=>{
+    co.y+=3;
+    ctx.fillStyle="gold";
+    ctx.fillRect(co.x,co.y,15,15);
 
-  if(lifeVal<=0){
-    alert("💀 GAME OVER");
-    location.reload();
+    if(Math.abs(player.x-co.x)<30 && Math.abs(player.y-co.y)<30){
+      coins+=10;
+      coinsArr.splice(i,1);
+    }
+  });
+
+  // UPDATE UI
+  document.getElementById("score").innerText="Score: "+score;
+  document.getElementById("life").innerText="Life: "+life;
+  document.getElementById("coins").innerText="Coins: "+coins;
+
+  // GAME OVER
+  if(life<=0){
+    document.getElementById("gameOver").style.display="block";
+    return;
   }
 
   requestAnimationFrame(update);
 }
+
+update();
 </script>
 
 </body>
