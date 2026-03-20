@@ -2,169 +2,92 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>RM Warzone Lobby</title>
+<title>Lobby</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <style>
 body{
   margin:0;
   font-family:Arial;
-  color:white;
   background:url('logo.png') no-repeat center/cover;
+  color:white;
 }
 
-/* TOP BAR */
-#topbar{
+#top{
   display:flex;
   justify-content:space-between;
   padding:10px;
-  background:rgba(0,0,0,0.7);
+  background:rgba(0,0,0,0.6);
 }
 
-/* LEFT MENU */
 #menu{
   position:absolute;
-  left:10px;
+  left:20px;
   top:120px;
 }
 
-.menuBtn{
-  display:block;
-  margin:10px 0;
-  padding:10px 15px;
-  background:rgba(0,0,0,0.7);
+.btn{
+  margin:10px;
+  padding:10px;
+  background:black;
   border-radius:8px;
   cursor:pointer;
 }
 
-/* CHARACTER */
-#character{
+#play{
   position:absolute;
-  top:120px;
-  left:50%;
-  transform:translateX(-50%);
-}
-
-#character img{
-  height:320px;
-}
-
-/* FLIGHT */
-#flight{
-  position:absolute;
-  right:20px;
-  top:150px;
-}
-
-#flight img{
-  height:150px;
-}
-
-/* START BUTTON */
-#start{
-  position:absolute;
-  bottom:30px;
-  right:30px;
+  bottom:40px;
+  right:40px;
+  background:gold;
   padding:15px 40px;
   font-size:20px;
-  background:gold;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-}
-
-/* SHOP */
-#shopBox{
-  display:none;
-  position:absolute;
-  top:80px;
-  left:50%;
-  transform:translateX(-50%);
-  background:black;
-  padding:20px;
-  border-radius:10px;
-}
-
-/* PROMO */
-#promoBox{
-  position:absolute;
-  bottom:30px;
-  left:30px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- TOP -->
-<div id="topbar">
-  <div>👤 Rishi</div>
-  <div>🪙 5000 | 💎 20</div>
+<div id="top">
+  <div id="name">Loading...</div>
+  <div id="money">🪙 0 | 💎 0</div>
 </div>
 
-<!-- MENU -->
 <div id="menu">
-  <div class="menuBtn" onclick="openShop()">🛒 SHOP</div>
-  <div class="menuBtn">🎁 EVENTS</div>
-  <div class="menuBtn">📋 MISSIONS</div>
+  <div class="btn">🛒 SHOP</div>
+  <div class="btn">👥 FRIENDS</div>
+  <div class="btn">⚙ SETTINGS</div>
 </div>
 
-<!-- CHARACTER -->
-<div id="character">
-  <img src="https://i.imgur.com/6X12UGp.png">
-</div>
-
-<!-- FLIGHT -->
-<div id="flight">
-  <img src="https://i.imgur.com/8QfQw6M.png">
-</div>
-
-<!-- START -->
-<button id="start" onclick="startGame()">START</button>
-
-<!-- SHOP -->
-<div id="shopBox">
-  <h2>SHOP</h2>
-  <p>✈️ Jet = 1000 Coins</p>
-  <button onclick="buyJet()">Buy</button>
-  <br><br>
-  <button onclick="closeShop()">Close</button>
-</div>
-
-<!-- PROMO -->
-<div id="promoBox">
-  <input id="promo" placeholder="Enter Code">
-  <button onclick="redeem()">Redeem</button>
-</div>
+<button id="play" onclick="start()">START</button>
 
 <script>
-function startGame(){
+const firebaseConfig = {
+  apiKey: "AIzaSyArnIKZ8odykhlwMDBjXVOyTOpCXXFnNBk",
+  authDomain: "rmuniverse120824.firebaseapp.com",
+  projectId: "rmuniverse120824",
+  appId: "1:338852799104:web:1dc2b2fb99e84db9503c65"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth();
+const db=firebase.firestore();
+
+auth.onAuthStateChanged(user=>{
+  if(user){
+    db.collection("users").doc(user.uid).get()
+    .then(doc=>{
+      let d=doc.data();
+      name.innerText="👤 "+d.username;
+      money.innerText="🪙 "+d.coins+" | 💎 "+d.gems;
+    });
+  }
+});
+
+function start(){
   window.location.href="rm-warzone.html";
-}
-
-function openShop(){
-  document.getElementById("shopBox").style.display="block";
-}
-
-function closeShop(){
-  document.getElementById("shopBox").style.display="none";
-}
-
-function buyJet(){
-  alert("Jet Purchased ✈️");
-}
-
-function redeem(){
-  let code=document.getElementById("promo").value;
-
-  if(code=="RM100"){
-    alert("500 Coins Added 🪙");
-  }
-  else if(code=="LEGEND"){
-    alert("10 Gems Added 💎");
-  }
-  else{
-    alert("Invalid Code ❌");
-  }
 }
 </script>
 
