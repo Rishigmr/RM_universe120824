@@ -24,7 +24,7 @@ body{
 /* BUTTON */
 button{
   padding:15px 30px;
-  margin-top:50px;
+  margin-top:30px;
   font-size:20px;
   border:none;
   border-radius:10px;
@@ -43,6 +43,16 @@ button:hover{
   margin-top:30px;
   font-size:18px;
 }
+
+/* TEAM BOX */
+#team{
+  display:none;
+  margin-top:20px;
+  background:rgba(0,0,0,0.6);
+  padding:15px;
+  border-radius:10px;
+  display:inline-block;
+}
 </style>
 </head>
 
@@ -54,17 +64,38 @@ button:hover{
 
 <div id="loading">🔍 Finding Players...</div>
 
+<div id="team">
+  <h3>Team (6 Players)</h3>
+  <p>Rishi</p>
+  <p>Player45</p>
+  <p>SniperX</p>
+  <p>Ghost</p>
+  <p>Warrior</p>
+  <p>Shadow</p>
+</div>
+
 <script>
 function startMatch(){
   document.querySelector("button").style.display="none";
   document.getElementById("loading").style.display="block";
 
-  // fake matchmaking delay
+  setTimeout(()=>{
+    document.getElementById("loading").innerText="👥 Players Found!";
+    document.getElementById("team").style.display="block";
+  },2000);
+
+  setTimeout(()=>{
+    document.getElementById("loading").innerText="⏳ Match Starting...";
+  },4000);
+
   setTimeout(()=>{
     window.location.href="rm-warzone.html";
-  },3000);
+  },6000);
 }
 </script>
 
 </body>
 </html>
+
+
+
