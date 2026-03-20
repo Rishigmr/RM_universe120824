@@ -8,45 +8,57 @@
 body{
   margin:0;
   overflow:hidden;
-  background:linear-gradient(#000,#220000);
+  background:linear-gradient(#000,#330000);
 }
 
 /* UI */
-#score,#life,#coins{
+#hp,#coins{
   position:absolute;
-  background:url('logo.png') no-repeat center/cover;
-  padding:8px 15px;
-  border-radius:10px;
+  padding:10px 15px;
+  background:rgba(0,0,0,0.6);
   color:white;
+  border-radius:10px;
 }
 
-#score{ top:10px; left:10px; }
-#life{ top:10px; right:10px; }
-#coins{ top:40px; left:10px; }
+#hp{ top:10px; left:10px; }
+#coins{ top:50px; left:10px; }
 
-#gameOver{
+/* HEAL BUTTON */
+#heal{
+  position:absolute;
+  bottom:30px;
+  left:30px;
+  padding:12px 20px;
+  background:green;
+  color:white;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+/* GAME OVER */
+#over{
   display:none;
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
   background:black;
-  padding:30px;
   color:white;
-  border-radius:10px;
-  text-align:center;
+  padding:20px;
 }
 </style>
 </head>
 
 <body>
 
-<div id="score">Score: 0</div>
-<div id="life">Life: 3</div>
-<div id="coins">Coins: 0</div>
+<div id="hp">❤️ HP: 1000</div>
+<div id="coins">🪙 Coins: 0</div>
 
-<div id="gameOver">
-  <h2>💀 GAME OVER</h2>
+<button id="heal" onclick="heal()">🧪 Use Chemical</button>
+
+<div id="over">
+  <h2>GAME OVER</h2>
   <button onclick="location.reload()">Restart</button>
 </div>
 
@@ -59,18 +71,16 @@ let ctx=c.getContext("2d");
 c.width=window.innerWidth;
 c.height=window.innerHeight;
 
-let player={x:200,y:500,size:40};
+let player={x:200,y:500};
 let bullets=[];
 let enemies=[];
-let coinsArr=[];
 
-let score=0;
-let life=3;
-let coins=0;
+let hp=1000;
+let coins=100;
 
-// AUTO SHOOT
+// SHOOT
 setInterval(()=>{
-  bullets.push({x:player.x+15,y:player.y});
+  bullets.push({x:player.x+10,y:player.y});
 },300);
 
 // MOVE
@@ -82,24 +92,14 @@ window.onmousemove=(e)=>{
 setInterval(()=>{
   enemies.push({
     x:Math.random()*c.width,
-    y:0,
-    size:30
+    y:0
   });
 },1000);
-
-// COIN SPAWN
-setInterval(()=>{
-  coinsArr.push({
-    x:Math.random()*c.width,
-    y:0,
-    size:15
-  });
-},2000);
 
 function update(){
   ctx.clearRect(0,0,c.width,c.height);
 
-  // PLAYER (PLANE)
+  // PLAYER
   ctx.fillStyle="cyan";
   ctx.fillRect(player.x,player.y,40,40);
 
@@ -116,46 +116,45 @@ function update(){
     ctx.fillStyle="red";
     ctx.fillRect(e.x,e.y,30,30);
 
-    // HIT PLAYER
+    // DAMAGE
     if(Math.abs(player.x-e.x)<30 && Math.abs(player.y-e.y)<30){
-      life--;
+      hp-=50;
       enemies.splice(i,1);
     }
 
-    // BULLET HIT
+    // KILL
     bullets.forEach((b,bi)=>{
       if(Math.abs(b.x-e.x)<25 && Math.abs(b.y-e.y)<25){
         enemies.splice(i,1);
         bullets.splice(bi,1);
-        score+=10;
+        coins+=10;
       }
     });
   });
 
-  // COINS
-  coinsArr.forEach((co,i)=>{
-    co.y+=3;
-    ctx.fillStyle="gold";
-    ctx.fillRect(co.x,co.y,15,15);
-
-    if(Math.abs(player.x-co.x)<30 && Math.abs(player.y-co.y)<30){
-      coins+=10;
-      coinsArr.splice(i,1);
-    }
-  });
-
   // UPDATE UI
-  document.getElementById("score").innerText="Score: "+score;
-  document.getElementById("life").innerText="Life: "+life;
-  document.getElementById("coins").innerText="Coins: "+coins;
+  document.getElementById("hp").innerText="❤️ HP: "+hp;
+  document.getElementById("coins").innerText="🪙 Coins: "+coins;
 
   // GAME OVER
-  if(life<=0){
-    document.getElementById("gameOver").style.display="block";
+  if(hp<=0){
+    document.getElementById("over").style.display="block";
     return;
   }
 
   requestAnimationFrame(update);
+}
+
+// HEAL SYSTEM
+function heal(){
+  if(coins>=50){
+    coins-=50;
+    hp+=200;
+
+    if(hp>1000) hp=1000;
+  }else{
+    alert("Not enough coins ❌");
+  }
 }
 
 update();
