@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>RM Warzone Lobby</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  color:white;
+  background:url('https://wallpaperaccess.com/full/31193.jpg') no-repeat center/cover;
+}
+
+/* TOP BAR */
+#topbar{
+  display:flex;
+  justify-content:space-between;
+  padding:10px;
+  background:rgba(0,0,0,0.7);
+}
+
+/* LEFT MENU */
+#menu{
+  position:absolute;
+  left:10px;
+  top:120px;
+}
+
+.menuBtn{
+  display:block;
+  margin:10px 0;
+  padding:10px 15px;
+  background:rgba(0,0,0,0.7);
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* CHARACTER */
+#character{
+  position:absolute;
+  top:120px;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+#character img{
+  height:320px;
+}
+
+/* FLIGHT */
+#flight{
+  position:absolute;
+  right:20px;
+  top:150px;
+}
+
+#flight img{
+  height:150px;
+}
+
+/* START BUTTON */
+#start{
+  position:absolute;
+  bottom:30px;
+  right:30px;
+  padding:15px 40px;
+  font-size:20px;
+  background:gold;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+/* SHOP */
+#shopBox{
+  display:none;
+  position:absolute;
+  top:80px;
+  left:50%;
+  transform:translateX(-50%);
+  background:black;
+  padding:20px;
+  border-radius:10px;
+}
+
+/* PROMO */
+#promoBox{
+  position:absolute;
+  bottom:30px;
+  left:30px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOP -->
+<div id="topbar">
+  <div>👤 Rishi</div>
+  <div>🪙 5000 | 💎 20</div>
+</div>
+
+<!-- MENU -->
+<div id="menu">
+  <div class="menuBtn" onclick="openShop()">🛒 SHOP</div>
+  <div class="menuBtn">🎁 EVENTS</div>
+  <div class="menuBtn">📋 MISSIONS</div>
+</div>
+
+<!-- CHARACTER -->
+<div id="character">
+  <img src="https://i.imgur.com/6X12UGp.png">
+</div>
+
+<!-- FLIGHT -->
+<div id="flight">
+  <img src="https://i.imgur.com/8QfQw6M.png">
+</div>
+
+<!-- START -->
+<button id="start" onclick="startGame()">START</button>
+
+<!-- SHOP -->
+<div id="shopBox">
+  <h2>SHOP</h2>
+  <p>✈️ Jet = 1000 Coins</p>
+  <button onclick="buyJet()">Buy</button>
+  <br><br>
+  <button onclick="closeShop()">Close</button>
+</div>
+
+<!-- PROMO -->
+<div id="promoBox">
+  <input id="promo" placeholder="Enter Code">
+  <button onclick="redeem()">Redeem</button>
+</div>
+
+<script>
+function startGame(){
+  window.location.href="rm-warzone.html";
+}
+
+function openShop(){
+  document.getElementById("shopBox").style.display="block";
+}
+
+function closeShop(){
+  document.getElementById("shopBox").style.display="none";
+}
+
+function buyJet(){
+  alert("Jet Purchased ✈️");
+}
+
+function redeem(){
+  let code=document.getElementById("promo").value;
+
+  if(code=="RM100"){
+    alert("500 Coins Added 🪙");
+  }
+  else if(code=="LEGEND"){
+    alert("10 Gems Added 💎");
+  }
+  else{
+    alert("Invalid Code ❌");
+  }
+}
+</script>
+
+</body>
+</html>
