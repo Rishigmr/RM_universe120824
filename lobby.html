@@ -18,18 +18,16 @@ body{
   width:100%;
   height:100vh;
   overflow:hidden;
-  font-family:Arial, sans-serif;
+  font-family:Arial,sans-serif;
   color:white;
   background:#050505 url("bg.jpg") center/cover no-repeat;
 }
-
-/* DARK OVERLAY */
 
 .overlay{
   position:fixed;
   inset:0;
   background:
-    linear-gradient(90deg,rgba(0,0,0,.85),rgba(0,0,0,.35),rgba(0,0,0,.75)),
+    linear-gradient(90deg,rgba(0,0,0,.88),rgba(0,0,0,.35),rgba(0,0,0,.8)),
     linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,.75));
   z-index:0;
 }
@@ -40,7 +38,7 @@ body{
   position:absolute;
   width:3px;
   height:3px;
-  background:#ff3131;
+  background:red;
   border-radius:50%;
   box-shadow:0 0 10px red;
   animation:float 6s linear infinite;
@@ -48,7 +46,6 @@ body{
 }
 
 @keyframes float{
-
   0%{
     transform:translateY(100vh);
     opacity:0;
@@ -62,7 +59,6 @@ body{
     transform:translateY(-10vh);
     opacity:0;
   }
-
 }
 
 /* MAIN */
@@ -87,10 +83,9 @@ body{
   align-items:center;
 }
 
-/* LOGO */
-
 .logo{
   width:170px;
+
   filter:
     drop-shadow(0 0 8px red)
     drop-shadow(0 0 20px darkred);
@@ -168,6 +163,7 @@ body{
 
 .side-menu{
   position:absolute;
+
   top:50%;
   left:25px;
 
@@ -184,7 +180,6 @@ body{
 
   border:none;
   border-left:4px solid red;
-
   border-radius:8px;
 
   color:white;
@@ -192,6 +187,7 @@ body{
 
   text-align:left;
   font-weight:bold;
+
   cursor:pointer;
 
   transition:.25s;
@@ -201,7 +197,9 @@ body{
 
 .menu-btn:hover{
   transform:translateX(8px);
+
   background:rgba(150,0,0,.6);
+
   box-shadow:0 0 18px rgba(255,0,0,.4);
 }
 
@@ -218,38 +216,60 @@ body{
   text-align:center;
 }
 
-/* CHARACTER */
+/* 3D SCENE AREA */
 
-.character{
-  width:320px;
+#threeDScene{
+  width:360px;
+  height:300px;
 
-  filter:
-    drop-shadow(0 0 15px cyan)
-    drop-shadow(0 0 40px rgba(0,255,255,.4));
+  margin:auto;
 
-  animation:
-    characterFloat 3s ease-in-out infinite;
+  position:relative;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-@keyframes characterFloat{
+/* TEMPORARY 3D STYLE */
+
+.warzone-core{
+  width:180px;
+  height:180px;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(circle,#ff4444,#650000 55%,#050505 75%);
+
+  box-shadow:
+    0 0 25px red,
+    0 0 60px rgba(255,0,0,.6),
+    inset 0 0 35px #000;
+
+  animation:coreFloat 3s ease-in-out infinite;
+}
+
+@keyframes coreFloat{
 
   0%,100%{
-    transform:translateY(0) scale(1);
+    transform:translateY(0) rotate(0deg);
   }
 
   50%{
-    transform:translateY(-12px) scale(1.03);
+    transform:translateY(-12px) rotate(180deg);
   }
 
 }
 
-/* BATTLE TEXT */
+/* READY */
 
 .ready{
-  margin-top:10px;
+  margin-top:5px;
 
   font-size:28px;
   font-weight:bold;
+
   letter-spacing:4px;
 
   text-shadow:
@@ -261,6 +281,7 @@ body{
   margin-top:6px;
 
   color:#bbb;
+
   letter-spacing:2px;
 }
 
@@ -270,17 +291,25 @@ body{
   margin-top:25px;
 
   width:240px;
+
   padding:17px;
 
   border:none;
   border-radius:10px;
 
-  background:linear-gradient(90deg,#8b0000,#ff1a1a,#8b0000);
+  background:
+    linear-gradient(
+      90deg,
+      #8b0000,
+      #ff1a1a,
+      #8b0000
+    );
 
   color:white;
 
   font-size:22px;
   font-weight:bold;
+
   letter-spacing:3px;
 
   cursor:pointer;
@@ -296,6 +325,7 @@ body{
 
 .play:hover{
   transform:scale(1.06);
+
   box-shadow:
     0 0 25px red,
     0 0 55px rgba(255,0,0,.7);
@@ -308,7 +338,9 @@ body{
   }
 
   50%{
-    box-shadow:0 0 35px red,0 0 60px rgba(255,0,0,.5);
+    box-shadow:
+      0 0 35px red,
+      0 0 60px rgba(255,0,0,.5);
   }
 
 }
@@ -326,6 +358,7 @@ body{
   justify-content:space-between;
 
   color:#aaa;
+
   font-size:12px;
 }
 
@@ -351,8 +384,14 @@ body{
     font-size:12px;
   }
 
-  .character{
-    width:230px;
+  #threeDScene{
+    width:260px;
+    height:240px;
+  }
+
+  .warzone-core{
+    width:140px;
+    height:140px;
   }
 
   .ready{
@@ -400,11 +439,20 @@ body{
 
     <div class="profile">
 
-      <div class="avatar">👤</div>
+      <div class="avatar">
+        👤
+      </div>
 
       <div>
-        <div class="username">RISHI</div>
-        <div class="status">● ONLINE</div>
+
+        <div class="username">
+          RISHI
+        </div>
+
+        <div class="status">
+          ● ONLINE
+        </div>
+
       </div>
 
     </div>
@@ -416,9 +464,13 @@ body{
 
   <div class="currency">
 
-    <div class="money">🪙 1000</div>
+    <div class="money">
+      🪙 1000
+    </div>
 
-    <div class="money">💎 10</div>
+    <div class="money">
+      💎 10
+    </div>
 
   </div>
 
@@ -446,7 +498,11 @@ body{
 
   <div class="center">
 
-    <img class="character" src="plane.png">
+    <div id="threeDScene">
+
+      <div class="warzone-core"></div>
+
+    </div>
 
     <div class="ready">
       READY FOR BATTLE
@@ -482,8 +538,9 @@ body{
 
 <!-- SOUND -->
 
-<audio id="clickSound"
-src="https://www.soundjay.com/buttons/button-16.mp3">
+<audio
+  id="clickSound"
+  src="https://www.soundjay.com/buttons/button-16.mp3">
 </audio>
 
 
