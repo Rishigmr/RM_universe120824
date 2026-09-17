@@ -579,6 +579,249 @@ function menuClick(name){
 }
 
 </script>
+<script>
 
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(
+  60,
+  360 / 300,
+  0.1,
+  1000
+);
+
+const renderer = new THREE.WebGLRenderer({
+  alpha:true,
+  antialias:true
+});
+
+renderer.setSize(360,300);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+
+document.getElementById("threeDScene").appendChild(
+  renderer.domElement
+);
+
+
+/* REMOVE TEMPORARY CORE */
+
+const oldCore = document.querySelector(".warzone-core");
+
+if(oldCore){
+  oldCore.remove();
+}
+
+
+/* LIGHT */
+
+const light = new THREE.PointLight(
+  0xff2222,
+  3,
+  100
+);
+
+light.position.set(2,3,4);
+
+scene.add(light);
+
+
+/* SECOND LIGHT */
+
+const blueLight = new THREE.PointLight(
+  0x2244ff,
+  2,
+  100
+);
+
+blueLight.position.set(-3,-2,3);
+
+scene.add(blueLight);
+
+
+/* MAIN WARZONE SPHERE */
+
+const sphereGeometry =
+  new THREE.IcosahedronGeometry(1.45,2);
+
+const sphereMaterial =
+  new THREE.MeshStandardMaterial({
+    color:0x550000,
+    emissive:0x220000,
+    metalness:0.8,
+    roughness:0.25
+  });
+
+const sphere =
+  new THREE.Mesh(
+    sphereGeometry,
+    sphereMaterial
+  );
+
+scene.add(sphere);
+
+
+/* OUTER RING */
+
+const ringGeometry =
+  new THREE.TorusGeometry(
+    2,
+    0.035,
+    16,
+    100
+  );
+
+const ringMaterial =
+  new THREE.MeshBasicMaterial({
+    color:0xff2222
+  });
+
+const ring =
+  new THREE.Mesh(
+    ringGeometry,
+    ringMaterial
+  );
+
+ring.rotation.x =
+  Math.PI / 2;
+
+scene.add(ring);
+
+
+/* SECOND RING */
+
+const ring2 =
+  new THREE.Mesh(
+    new THREE.TorusGeometry(
+      2.25,
+      0.025,
+      16,
+      100
+    ),
+    new THREE.MeshBasicMaterial({
+      color:0x2266ff
+    })
+  );
+
+ring2.rotation.y =
+  Math.PI / 3;
+
+scene.add(ring2);
+
+
+/* SMALL ENERGY BALLS */
+
+const ballGeometry =
+  new THREE.SphereGeometry(
+    0.08,
+    12,
+    12
+  );
+
+const ballMaterial =
+  new THREE.MeshBasicMaterial({
+    color:0xff3333
+  });
+
+const balls=[];
+
+for(let i=0;i<18;i++){
+
+  const ball =
+    new THREE.Mesh(
+      ballGeometry,
+      ballMaterial
+    );
+
+  const angle =
+    (i/18)*Math.PI*2;
+
+  ball.position.x =
+    Math.cos(angle)*2.7;
+
+  ball.position.y =
+    Math.sin(angle)*2.7;
+
+  ball.position.z =
+    (Math.random()-0.5)*1.5;
+
+  scene.add(ball);
+
+  balls.push(ball);
+}
+
+
+/* CAMERA */
+
+camera.position.z = 6;
+
+
+/* ANIMATION */
+
+function animate(){
+
+  requestAnimationFrame(animate);
+
+  sphere.rotation.x += 0.004;
+  sphere.rotation.y += 0.008;
+
+  ring.rotation.z += 0.012;
+
+  ring2.rotation.x += 0.008;
+  ring2.rotation.z -= 0.006;
+
+  balls.forEach((ball,index)=>{
+
+    const angle =
+      Date.now()*0.001 +
+      index;
+
+    ball.position.y =
+      Math.sin(angle)*2.5;
+
+    ball.position.x =
+      Math.cos(angle)*2.5;
+
+  });
+
+  renderer.render(
+    scene,
+    camera
+  );
+
+}
+
+animate();
+
+
+/* RESIZE */
+
+window.addEventListener(
+  "resize",
+  function(){
+
+    const width =
+      document.getElementById(
+        "threeDScene"
+      ).clientWidth;
+
+    const height =
+      document.getElementById(
+        "threeDScene"
+      ).clientHeight;
+
+    camera.aspect =
+      width / height;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(
+      width,
+      height
+    );
+
+  }
+);
+
+</script>
 </body>
 </html>
