@@ -657,7 +657,9 @@ let mouseY=
 let speedBoost=false;
 let shieldOn=false;
 let rageOn=false;
+let hitFlash=0;
 const bulletDamage = 25;
+const enemyMaxHp = 250;
 
 
 /* KEYBOARD */
@@ -1016,6 +1018,15 @@ function updateEnemies(){
       );
 
       ctx.fill();
+
+      /* ENEMY HP BAR */
+      const hpRatio = Math.max(0, e.hp / e.maxHp);
+
+      ctx.fillStyle = "#220000";
+      ctx.fillRect(e.x, e.y - 10, 36, 5);
+
+      ctx.fillStyle = hpRatio > 0.5 ? "#00ff66" : hpRatio > 0.25 ? "#ffd000" : "#ff3333";
+      ctx.fillRect(e.x, e.y - 10, 36 * hpRatio, 5);
 
       ctx.restore();
 
