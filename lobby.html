@@ -721,7 +721,52 @@ const ballMaterial =
   new THREE.MeshBasicMaterial({
     color:0xff3333
   });
+/* WARZONE PARTICLES */
 
+const particleGeometry =
+  new THREE.BufferGeometry();
+
+const particleCount = 250;
+
+const particlePositions =
+  new Float32Array(particleCount * 3);
+
+for(let i = 0; i < particleCount; i++){
+
+  particlePositions[i * 3] =
+    (Math.random() - 0.5) * 12;
+
+  particlePositions[i * 3 + 1] =
+    (Math.random() - 0.5) * 8;
+
+  particlePositions[i * 3 + 2] =
+    (Math.random() - 0.5) * 8;
+
+}
+
+particleGeometry.setAttribute(
+  "position",
+  new THREE.BufferAttribute(
+    particlePositions,
+    3
+  )
+);
+
+const particleMaterial =
+  new THREE.PointsMaterial({
+    color:0xff2222,
+    size:0.035,
+    transparent:true,
+    opacity:0.8
+  });
+
+const warParticles =
+  new THREE.Points(
+    particleGeometry,
+    particleMaterial
+  );
+
+scene.add(warParticles);
 const balls=[];
 
 for(let i=0;i<18;i++){
@@ -824,6 +869,8 @@ function animate(){
   requestAnimationFrame(animate);
 
   sphere.rotation.x += 0.004;
+  warParticles.rotation.y += 0.0008;
+warParticles.rotation.x += 0.0003;
   sphere.rotation.y += 0.008;
 sphere.rotation.y += mouseX * 0.01;
 sphere.rotation.x += mouseY * 0.01;
