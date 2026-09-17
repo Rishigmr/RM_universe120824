@@ -561,14 +561,24 @@ function startGame(){
 
   playSound();
 
+  const button =
+    document.querySelector(".play");
+
+  button.innerText =
+    "⏳ ENTERING WARZONE...";
+
+  button.disabled = true;
+
+  button.style.opacity = "0.7";
+
   setTimeout(function(){
 
-    window.location.href="dashboard.html";
+    window.location.href =
+      "dashboard.html";
 
-  },300);
+  },1500);
 
 }
-
 
 function menuClick(name){
 
