@@ -753,7 +753,56 @@ for(let i=0;i<18;i++){
 /* CAMERA */
 
 camera.position.z = 6;
+/* WARZONE GROUND */
 
+const groundGeometry =
+  new THREE.PlaneGeometry(20,20);
+
+const groundMaterial =
+  new THREE.MeshStandardMaterial({
+    color:0x080808,
+    metalness:0.5,
+    roughness:0.8
+  });
+
+const ground =
+  new THREE.Mesh(
+    groundGeometry,
+    groundMaterial
+  );
+
+ground.rotation.x =
+  -Math.PI / 2;
+
+ground.position.y =
+  -1.8;
+
+scene.add(ground);
+
+
+/* WARZONE GRID */
+
+const grid =
+  new THREE.GridHelper(
+    20,
+    20,
+    0xff2222,
+    0x222222
+  );
+
+grid.position.y =
+  -1.78;
+
+scene.add(grid);
+
+
+/* FOG */
+
+scene.fog =
+  new THREE.FogExp2(
+    0x050505,
+    0.08
+  );
 
 /* ANIMATION */
 
