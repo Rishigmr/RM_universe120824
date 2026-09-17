@@ -805,14 +805,31 @@ scene.fog =
   );
 
 /* ANIMATION */
+/* MOUSE CONTROL */
 
+let mouseX = 0;
+let mouseY = 0;
+
+document.addEventListener("mousemove", function(event){
+
+  mouseX =
+    (event.clientX / window.innerWidth) - 0.5;
+
+  mouseY =
+    (event.clientY / window.innerHeight) - 0.5;
+
+});
 function animate(){
 
   requestAnimationFrame(animate);
 
   sphere.rotation.x += 0.004;
   sphere.rotation.y += 0.008;
+sphere.rotation.y += mouseX * 0.01;
+sphere.rotation.x += mouseY * 0.01;
 
+ring.rotation.y += mouseX * 0.005;
+ring2.rotation.x += mouseY * 0.005;
   ring.rotation.z += 0.012;
 
   ring2.rotation.x += 0.008;
