@@ -657,7 +657,7 @@ let mouseY=
 let speedBoost=false;
 let shieldOn=false;
 let rageOn=false;
-const bulletDamage = 25; 
+const bulletDamage = 25;
 
 
 /* KEYBOARD */
@@ -735,6 +735,10 @@ setInterval(
       y:-40,
 
       size:35,
+
+      hp:100,
+
+      maxHp:100,
 
       speed:
         2+
@@ -1056,31 +1060,37 @@ function updateEnemies(){
             )<30
           ){
 
-            enemies.splice(i,1);
+            e.hp -= bulletDamage;
 
             bullets.splice(bi,1);
 
-            kills++;
+            if(e.hp <= 0){
 
-            score+=
-              rageOn ?
-              200 :
-              100;
+              enemies.splice(i,1);
 
-            coins+=
-              rageOn ?
-              20 :
-              10;
+              kills++;
 
-            explosions.push({
+              score+=
+                rageOn ?
+                200 :
+                100;
 
-              x:e.x+18,
+              coins+=
+                rageOn ?
+                20 :
+                10;
 
-              y:e.y+18,
+              explosions.push({
 
-              size:5
+                x:e.x+18,
 
-            });
+                y:e.y+18,
+
+                size:5
+
+              });
+
+            }
 
           }
 
