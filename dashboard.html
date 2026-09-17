@@ -1,127 +1,327 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="UTF-8">
-<title>RM Warzone Lobby</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>RM WARZONE — Matchmaking</title>
 
 <style>
+
+*{
+  box-sizing:border-box;
+}
+
 body{
   margin:0;
-  font-family:Arial;
-  background:linear-gradient(#000,#1a0000);
-  color:white;
-  text-align:center;
+  width:100%;
+  height:100vh;
   overflow:hidden;
+
+  font-family:Arial,sans-serif;
+  color:white;
+
+  background:
+    linear-gradient(rgba(0,0,0,.72),rgba(0,0,0,.9)),
+    url("bg.jpg") center/cover no-repeat;
+}
+
+/* MAIN */
+
+.container{
+  width:100%;
+  height:100vh;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  text-align:center;
 }
 
 /* LOGO */
-#logo{
-  font-size:45px;
-  margin-top:50px;
-  color:red;
-  text-shadow:0 0 20px red,0 0 40px orange,0 0 60px darkred;
+
+.logo{
+  width:210px;
+
+  filter:
+    drop-shadow(0 0 10px red)
+    drop-shadow(0 0 30px darkred);
+
+  margin-bottom:20px;
 }
 
-/* BUTTON */
-button{
-  padding:15px 30px;
-  margin-top:30px;
-  font-size:20px;
-  border:none;
-  border-radius:10px;
-  background:red;
-  color:white;
-  cursor:pointer;
+/* TITLE */
+
+.title{
+  font-size:30px;
+  font-weight:bold;
+
+  letter-spacing:4px;
+
+  text-shadow:
+    0 0 10px red,
+    0 0 25px darkred;
 }
 
-button:hover{
-  background:darkred;
+.loading{
+  margin-top:10px;
+
+  color:#bbb;
+  font-size:17px;
 }
 
-/* LOADING */
-#loading{
-  display:none;
-  margin-top:25px;
-  font-size:20px;
+/* LOADING DOTS */
+
+.dots{
+  display:inline-block;
+  width:25px;
+  text-align:left;
 }
 
 /* TEAM */
-#team{
-  display:none;
-  margin-top:20px;
-  background:rgba(0,0,0,0.6);
-  padding:15px;
-  border-radius:10px;
-  display:inline-block;
+
+.team{
+  margin-top:25px;
+
+  width:320px;
+  padding:18px;
+
+  background:rgba(0,0,0,.65);
+
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:15px;
+
+  box-shadow:
+    0 0 25px rgba(255,0,0,.25);
+
+  backdrop-filter:blur(10px);
+}
+
+.team-title{
+  font-size:18px;
+  font-weight:bold;
+
+  margin-bottom:12px;
+
+  color:#ff3333;
+}
+
+.player{
+  display:flex;
+
+  justify-content:space-between;
+  align-items:center;
+
+  padding:9px 10px;
+
+  margin:6px 0;
+
+  background:rgba(255,255,255,.06);
+
+  border-radius:8px;
+}
+
+.online{
+  color:#55ff55;
+  font-size:12px;
 }
 
 /* COUNTDOWN */
+
 #countdown{
-  display:none;
-  font-size:40px;
   margin-top:20px;
-  color:yellow;
+
+  font-size:55px;
+  font-weight:bold;
+
+  color:#ff3333;
+
+  text-shadow:
+    0 0 15px red,
+    0 0 35px red;
 }
+
+/* HIDE */
+
+.hidden{
+  display:none;
+}
+
+/* FOOTER */
+
+.footer{
+  position:absolute;
+
+  bottom:18px;
+
+  left:25px;
+  right:25px;
+
+  display:flex;
+  justify-content:space-between;
+
+  color:#777;
+
+  font-size:12px;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<div id="logo">🔥 RM WARZONE 🔥</div>
+<div class="container">
 
-<button onclick="playSound(); startMatch()">▶ PLAY</button>
+  <img class="logo" src="logo.png">
 
-<div id="loading">🔍 Finding Players...</div>
+  <div class="title">
+    FINDING PLAYERS
+  </div>
 
-<div id="team">
-  <h3>Team (6 Players)</h3>
-  <p>Rishi</p>
-  <p>Player45</p>
-  <p>SniperX</p>
-  <p>Ghost</p>
-  <p>Warrior</p>
-  <p>Shadow</p>
+  <div class="loading">
+    Connecting to RM Warzone server<span class="dots" id="dots">.</span>
+  </div>
+
+  <div class="team hidden" id="team">
+
+    <div class="team-title">
+      ⚔ SQUAD — 6 PLAYERS
+    </div>
+
+    <div class="player">
+      <span>👤 RISHI</span>
+      <span class="online">● READY</span>
+    </div>
+
+    <div class="player">
+      <span>🎯 Player45</span>
+      <span class="online">● READY</span>
+    </div>
+
+    <div class="player">
+      <span>🔫 SniperX</span>
+      <span class="online">● READY</span>
+    </div>
+
+    <div class="player">
+      <span>👤 Ghost</span>
+      <span class="online">● READY</span>
+    </div>
+
+    <div class="player">
+      <span>⚔ Warrior</span>
+      <span class="online">● READY</span>
+    </div>
+
+    <div class="player">
+      <span>💀 Shadow</span>
+      <span class="online">● READY</span>
+    </div>
+
+  </div>
+
+  <div id="countdown" class="hidden">
+    3
+  </div>
+
 </div>
 
-<div id="countdown"></div>
+<div class="footer">
 
-<!-- SOUND -->
-<audio id="clickSound" src="https://www.soundjay.com/buttons/button-16.mp3"></audio>
+  <span>RM WARZONE</span>
+
+  <span>SERVER: ONLINE</span>
+
+</div>
+
 
 <script>
-function playSound(){
-  document.getElementById("clickSound").play();
-}
 
-function startMatch(){
-  document.querySelector("button").style.display="none";
-  document.getElementById("loading").style.display="block";
+/* LOADING DOTS */
 
-  // STEP 1
-  setTimeout(()=>{
-    document.getElementById("loading").innerText="👥 Players Found!";
-    document.getElementById("team").style.display="block";
-  },2000);
+let dotCount = 1;
 
-  // STEP 2
-  setTimeout(()=>{
-    document.getElementById("loading").innerText="⏳ Match Starting...";
-  },4000);
+setInterval(function(){
 
-  // STEP 3 COUNTDOWN
-  setTimeout(()=>{
-    document.getElementById("countdown").style.display="block";
-    let i=3;
-    let interval=setInterval(()=>{
-      document.getElementById("countdown").innerText=i;
-      i--;
-      if(i<0){
-        clearInterval(interval);
-        window.location.href="rm-warzone.html";
-      }
-    },1000);
-  },5000);
-}
+  dotCount++;
+
+  if(dotCount > 3){
+    dotCount = 1;
+  }
+
+  document.getElementById("dots").innerText =
+    ".".repeat(dotCount);
+
+},500);
+
+
+/* MATCHMAKING */
+
+setTimeout(function(){
+
+  document.querySelector(".title").innerText =
+    "PLAYERS FOUND";
+
+  document.querySelector(".loading").innerText =
+    "Squad assembled • All players ready";
+
+  document.getElementById("team")
+    .classList.remove("hidden");
+
+},2000);
+
+
+/* COUNTDOWN */
+
+setTimeout(function(){
+
+  document.querySelector(".title").innerText =
+    "MATCH STARTING";
+
+  document.querySelector(".loading").innerText =
+    "Entering the Warzone...";
+
+  document.getElementById("countdown")
+    .classList.remove("hidden");
+
+  let number = 3;
+
+  document.getElementById("countdown").innerText =
+    number;
+
+  let timer = setInterval(function(){
+
+    number--;
+
+    if(number > 0){
+
+      document.getElementById("countdown").innerText =
+        number;
+
+    }else{
+
+      clearInterval(timer);
+
+      document.getElementById("countdown").innerText =
+        "⚔";
+
+      setTimeout(function(){
+
+        window.location.href =
+          "rm-warzone.html";
+
+      },700);
+
+    }
+
+  },1000);
+
+},5000);
+
 </script>
 
 </body>
