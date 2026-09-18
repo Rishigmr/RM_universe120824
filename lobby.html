@@ -1,950 +1,124 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#07090d">
 <title>RM WARZONE — Lobby</title>
-
 <style>
-
-*{
-  box-sizing:border-box;
-}
-
-body{
-  margin:0;
-  width:100%;
-  height:100vh;
-  overflow:hidden;
-  font-family:Arial,sans-serif;
-  color:white;
-  background:#050505 url("bg.jpg") center/cover no-repeat;
-}
-
-.overlay{
-  position:fixed;
-  inset:0;
-  background:
-    linear-gradient(90deg,rgba(0,0,0,.88),rgba(0,0,0,.35),rgba(0,0,0,.8)),
-    linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,.75));
-  z-index:0;
-}
-
-/* PARTICLES */
-
-.particle{
-  position:absolute;
-  width:3px;
-  height:3px;
-  background:red;
-  border-radius:50%;
-  box-shadow:0 0 10px red;
-  animation:float 6s linear infinite;
-  opacity:.7;
-}
-
-@keyframes float{
-  0%{
-    transform:translateY(100vh);
-    opacity:0;
-  }
-
-  20%{
-    opacity:1;
-  }
-
-  100%{
-    transform:translateY(-10vh);
-    opacity:0;
-  }
-}
-
-/* MAIN */
-
-.main{
-  position:relative;
-  z-index:2;
-  width:100%;
-  height:100vh;
-}
-
-/* TOP BAR */
-
-.topbar{
-  position:absolute;
-  top:18px;
-  left:25px;
-  right:25px;
-
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.logo{
-  width:170px;
-
-  filter:
-    drop-shadow(0 0 8px red)
-    drop-shadow(0 0 20px darkred);
-}
-
-/* PROFILE */
-
-.profile{
-  display:flex;
-  align-items:center;
-  gap:12px;
-
-  padding:10px 18px;
-
-  background:rgba(0,0,0,.55);
-  border:1px solid rgba(255,255,255,.15);
-  border-radius:15px;
-
-  backdrop-filter:blur(10px);
-}
-
-.avatar{
-  width:45px;
-  height:45px;
-
-  border-radius:50%;
-
-  background:#111;
-  border:2px solid red;
-
-  display:flex;
-  justify-content:center;
-  align-items:center;
-
-  font-size:22px;
-
-  box-shadow:0 0 15px red;
-}
-
-.username{
-  font-weight:bold;
-  font-size:16px;
-}
-
-.status{
-  font-size:11px;
-  color:#54ff54;
-}
-
-/* CURRENCY */
-
-.currency{
-  position:absolute;
-  top:90px;
-  right:25px;
-
-  display:flex;
-  gap:10px;
-}
-
-.money{
-  padding:9px 15px;
-
-  background:rgba(0,0,0,.6);
-  border:1px solid rgba(255,255,255,.15);
-
-  border-radius:12px;
-
-  backdrop-filter:blur(10px);
-
-  font-weight:bold;
-}
-
-/* SIDE MENU */
-
-.side-menu{
-  position:absolute;
-
-  top:50%;
-  left:25px;
-
-  transform:translateY(-50%);
-
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-.menu-btn{
-  width:150px;
-  padding:13px;
-
-  border:none;
-  border-left:4px solid red;
-  border-radius:8px;
-
-  color:white;
-  background:rgba(0,0,0,.65);
-
-  text-align:left;
-  font-weight:bold;
-
-  cursor:pointer;
-
-  transition:.25s;
-
-  backdrop-filter:blur(8px);
-}
-
-.menu-btn:hover{
-  transform:translateX(8px);
-
-  background:rgba(150,0,0,.6);
-
-  box-shadow:0 0 18px rgba(255,0,0,.4);
-}
-
-/* CENTER */
-
-.center{
-  position:absolute;
-
-  top:50%;
-  left:50%;
-
-  transform:translate(-50%,-50%);
-
-  text-align:center;
-}
-
-/* 3D SCENE AREA */
-
-#threeDScene{
-  width:360px;
-  height:300px;
-
-  margin:auto;
-
-  position:relative;
-
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-/* TEMPORARY 3D STYLE */
-
-.warzone-core{
-  width:180px;
-  height:180px;
-
-  border-radius:50%;
-
-  background:
-    radial-gradient(circle,#ff4444,#650000 55%,#050505 75%);
-
-  box-shadow:
-    0 0 25px red,
-    0 0 60px rgba(255,0,0,.6),
-    inset 0 0 35px #000;
-
-  animation:coreFloat 3s ease-in-out infinite;
-}
-
-@keyframes coreFloat{
-
-  0%,100%{
-    transform:translateY(0) rotate(0deg);
-  }
-
-  50%{
-    transform:translateY(-12px) rotate(180deg);
-  }
-
-}
-
-/* READY */
-
-.ready{
-  margin-top:5px;
-
-  font-size:28px;
-  font-weight:bold;
-
-  letter-spacing:4px;
-
-  text-shadow:
-    0 0 10px red,
-    0 0 25px darkred;
-}
-
-.subtitle{
-  margin-top:6px;
-
-  color:#bbb;
-
-  letter-spacing:2px;
-}
-
-/* PLAY BUTTON */
-
-.play{
-  margin-top:25px;
-
-  width:240px;
-
-  padding:17px;
-
-  border:none;
-  border-radius:10px;
-
-  background:
-    linear-gradient(
-      90deg,
-      #8b0000,
-      #ff1a1a,
-      #8b0000
-    );
-
-  color:white;
-
-  font-size:22px;
-  font-weight:bold;
-
-  letter-spacing:3px;
-
-  cursor:pointer;
-
-  box-shadow:
-    0 0 15px red,
-    0 0 35px rgba(255,0,0,.45);
-
-  animation:pulse 2s infinite;
-
-  transition:.25s;
-}
-
-.play:hover{
-  transform:scale(1.06);
-
-  box-shadow:
-    0 0 25px red,
-    0 0 55px rgba(255,0,0,.7);
-}
-
-@keyframes pulse{
-
-  0%,100%{
-    box-shadow:0 0 15px red;
-  }
-
-  50%{
-    box-shadow:
-      0 0 35px red,
-      0 0 60px rgba(255,0,0,.5);
-  }
-
-}
-
-/* BOTTOM */
-
-.bottom{
-  position:absolute;
-
-  bottom:18px;
-  left:25px;
-  right:25px;
-
-  display:flex;
-  justify-content:space-between;
-
-  color:#aaa;
-
-  font-size:12px;
-}
-
-/* MOBILE */
-
-@media(max-width:700px){
-
-  .logo{
-    width:130px;
-  }
-
-  .profile{
-    padding:7px 10px;
-  }
-
-  .side-menu{
-    left:10px;
-  }
-
-  .menu-btn{
-    width:115px;
-    padding:10px;
-    font-size:12px;
-  }
-
-  #threeDScene{
-    width:260px;
-    height:240px;
-  }
-
-  .warzone-core{
-    width:140px;
-    height:140px;
-  }
-
-  .ready{
-    font-size:20px;
-  }
-
-  .play{
-    width:200px;
-  }
-
-  .currency{
-    right:10px;
-    top:75px;
-  }
-
-}
-
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#ff2020;--red2:#8b0000;--cyan:#21d8ff;--green:#50ff79;--gold:#ffc928;--panel:rgba(7,9,13,.72);--line:rgba(255,255,255,.12)}
+html,body{width:100%;height:100%;overflow:hidden;background:#030406;color:#fff;font-family:Arial,Helvetica,sans-serif}
+body{background:#050505 url('bg.jpg') center/cover no-repeat}
+button{font:inherit;color:inherit}
+#boot{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#030406;transition:.45s}
+#boot.hide{opacity:0;pointer-events:none}
+.bootbox{text-align:center;width:min(390px,88vw)}
+.bootlogo{width:210px;max-width:70%;filter:drop-shadow(0 0 10px red) drop-shadow(0 0 25px #600)}
+.loader{height:4px;background:#191b20;border-radius:20px;margin:22px 0 10px;overflow:hidden}.loader i{display:block;height:100%;width:35%;background:linear-gradient(90deg,transparent,var(--red),#fff,var(--red));animation:load 1.2s infinite}
+.boottxt{font-size:11px;letter-spacing:3px;color:#999}
+@keyframes load{to{transform:translateX(290%)}}
+.overlay{position:fixed;inset:0;z-index:0;background:linear-gradient(90deg,rgba(0,0,0,.94),rgba(0,0,0,.34),rgba(0,0,0,.9)),linear-gradient(rgba(0,0,0,.12),rgba(0,0,0,.78))}
+.scanlines{position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 4px);mix-blend-mode:screen;opacity:.4}
+.particle{position:absolute;width:3px;height:3px;background:red;border-radius:50%;box-shadow:0 0 12px red;animation:float 7s linear infinite;opacity:.7}.p1{left:5%;animation-delay:0s}.p2{left:15%;animation-delay:2s}.p3{left:25%;animation-delay:4s}.p4{left:38%;animation-delay:1s}.p5{left:52%;animation-delay:3s}.p6{left:65%;animation-delay:5s}.p7{left:78%;animation-delay:2s}.p8{left:90%;animation-delay:4s}
+@keyframes float{0%{transform:translateY(100vh);opacity:0}20%{opacity:1}100%{transform:translateY(-10vh);opacity:0}}
+.main{position:relative;z-index:2;width:100%;height:100vh}
+.topbar{position:absolute;top:15px;left:22px;right:22px;display:flex;align-items:center;justify-content:space-between;z-index:10}.logo{width:170px;filter:drop-shadow(0 0 8px red) drop-shadow(0 0 20px #600)}
+.profile{display:flex;align-items:center;gap:10px;padding:8px 14px;background:var(--panel);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(14px);cursor:pointer;box-shadow:0 8px 30px #0008}.avatar{width:43px;height:43px;border-radius:50%;border:2px solid var(--red);display:grid;place-items:center;background:radial-gradient(circle,#252525,#080808);box-shadow:0 0 16px #f002}.username{font-size:14px;font-weight:900;max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.status{font-size:10px;color:var(--green);letter-spacing:1px;margin-top:3px}.topActions{display:flex;gap:7px;margin-left:auto;margin-right:12px}.iconBtn{border:1px solid var(--line);background:#0009;border-radius:10px;padding:9px 11px;cursor:pointer;backdrop-filter:blur(10px);transition:.2s}.iconBtn:hover{border-color:#f44;transform:translateY(-2px)}
+.currency{position:absolute;top:79px;right:22px;display:flex;gap:8px;z-index:10}.money{padding:8px 13px;background:#000a;border:1px solid var(--line);border-radius:11px;backdrop-filter:blur(10px);font-weight:800;font-size:13px}.money span{color:#fff}.coin{color:var(--gold)}.gem{color:#5de8ff}
+.side-menu{position:absolute;top:50%;left:22px;transform:translateY(-50%);display:flex;flex-direction:column;gap:9px;width:165px}.menu-btn{width:100%;padding:12px 13px;border:1px solid transparent;border-left:4px solid var(--red);border-radius:8px;color:#fff;background:#000a;text-align:left;font-weight:900;cursor:pointer;backdrop-filter:blur(10px);transition:.25s}.menu-btn:hover,.menu-btn.active{transform:translateX(7px);background:linear-gradient(90deg,#650000aa,#120000aa);border-color:#f223;box-shadow:0 0 20px #f002}.menu-btn small{float:right;color:#777;font-weight:normal}
+.center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:min(610px,65vw)}
+#threeDScene{width:360px;height:285px;margin:auto;position:relative;display:flex;align-items:center;justify-content:center}.ready{font-size:28px;font-weight:900;letter-spacing:4px;text-shadow:0 0 10px red,0 0 25px #700}.subtitle{margin-top:6px;color:#aaa;letter-spacing:2px;font-size:12px}.play{margin-top:21px;width:250px;padding:16px;border:1px solid #ff7777;border-radius:10px;background:linear-gradient(90deg,#720000,#f01818,#720000);color:#fff;font-size:21px;font-weight:900;letter-spacing:3px;cursor:pointer;box-shadow:0 0 15px red,0 0 35px #f007;animation:pulse 2s infinite;transition:.25s}.play:hover{transform:scale(1.05)}.play:disabled{cursor:wait;opacity:.65;animation:none}@keyframes pulse{0%,100%{box-shadow:0 0 15px red}50%{box-shadow:0 0 32px red,0 0 58px #f005}}
+.bottom{position:absolute;bottom:15px;left:22px;right:22px;display:flex;justify-content:space-between;color:#888;font-size:11px;letter-spacing:1px}.serverDot{color:var(--green)}
+.panel{position:fixed;z-index:50;right:20px;top:92px;width:min(390px,calc(100vw - 40px));max-height:calc(100vh - 120px);overflow:auto;background:rgba(7,9,13,.94);border:1px solid #ffffff1c;border-radius:18px;backdrop-filter:blur(22px);box-shadow:0 20px 70px #000b;transform:translateX(120%);transition:.3s}.panel.open{transform:translateX(0)}.panelHead{display:flex;justify-content:space-between;align-items:center;padding:18px;border-bottom:1px solid var(--line)}.panelHead h2{font-size:17px;letter-spacing:2px}.close{border:0;background:#ffffff0d;border-radius:8px;padding:6px 10px;cursor:pointer}.panelBody{padding:18px}.card{background:#ffffff06;border:1px solid var(--line);border-radius:13px;padding:14px;margin-bottom:11px}.card h3{font-size:13px;letter-spacing:1px;margin-bottom:7px}.muted{color:#8e939b;font-size:12px;line-height:1.55}.row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0}.badge{padding:4px 7px;border-radius:7px;font-size:9px;background:#102714;color:var(--green);border:1px solid #50ff7930}.danger{color:#ff6d6d}.action{border:1px solid #ff3434;background:#5d0000aa;border-radius:8px;padding:8px 11px;cursor:pointer}.action:hover{background:#920000}.switch{width:44px;height:23px;border-radius:20px;background:#333;position:relative;cursor:pointer}.switch i{position:absolute;width:17px;height:17px;left:3px;top:3px;border-radius:50%;background:#aaa;transition:.2s}.switch.on{background:#680000}.switch.on i{left:24px;background:#fff}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);opacity:0;z-index:100;padding:11px 17px;border:1px solid #ffffff20;border-radius:10px;background:#07090ddd;backdrop-filter:blur(12px);font-size:12px;transition:.25s;box-shadow:0 10px 40px #000}.toast.show{transform:translate(-50%,0);opacity:1}
+.modal{position:fixed;inset:0;z-index:80;background:#000b;display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalBox{width:min(460px,94vw);background:#080a0f;border:1px solid #ffffff18;border-radius:18px;box-shadow:0 25px 100px #000;overflow:hidden}.modalHead{padding:17px 19px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.modalHead h2{font-size:17px;letter-spacing:2px}.modalContent{padding:20px}.notice{padding:12px;border:1px solid #ff292933;background:#ff101008;border-radius:10px;color:#aaa;font-size:11px;line-height:1.55}.tabs{display:flex;gap:6px;margin-bottom:12px}.tab{flex:1;border:1px solid var(--line);background:#fff5;border-radius:8px;padding:9px;cursor:pointer;font-weight:bold}.tab.selected{background:#650000;border-color:#f33}.listItem{display:flex;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid #fff1}.miniAvatar{width:38px;height:38px;border-radius:50%;border:1px solid #f33;background:#111;display:grid;place-items:center}.grow{flex:1}.listItem strong{font-size:12px}.listItem small{display:block;color:#777;margin-top:3px}.progress{height:7px;background:#222;border-radius:20px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,#7b0000,#ff3030);width:68%}.newsTag{font-size:9px;color:#ff6d6d;letter-spacing:1px}.bigNum{font-size:24px;font-weight:900}.statGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.stat{padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff4}.stat b{display:block;font-size:17px}.stat span{font-size:9px;color:#777;letter-spacing:1px}
+.authGate{position:fixed;inset:0;z-index:200;background:#030406;display:flex;align-items:center;justify-content:center}.authGate.hide{display:none}.authCard{width:min(430px,92vw);padding:28px;border:1px solid #ffffff18;border-radius:18px;background:#090b10;box-shadow:0 25px 100px #000}.authCard img{display:block;width:190px;margin:0 auto 18px}.authCard h2{text-align:center;font-size:16px;letter-spacing:3px;margin-bottom:8px}.authCard p{text-align:center;color:#888;font-size:11px;margin-bottom:20px}.authSpin{width:30px;height:30px;border:3px solid #333;border-top-color:#f22;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:800px){.topbar{left:10px;right:10px}.logo{width:130px}.topActions{display:none}.profile{padding:7px 9px}.username{max-width:95px}.side-menu{left:9px;width:120px;gap:7px}.menu-btn{padding:10px 9px;font-size:11px}.menu-btn small{display:none}.currency{right:10px;top:72px}.money{font-size:11px;padding:7px 9px}.center{width:90vw}.ready{font-size:21px;letter-spacing:2px}.subtitle{font-size:10px}.play{width:210px;padding:14px;font-size:18px}#threeDScene{width:270px;height:220px}.bottom{left:10px;right:10px}.panel{right:10px;width:calc(100vw - 20px)}}
 </style>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
-
 <body>
-
-<div class="overlay"></div>
-
-<!-- PARTICLES -->
-
-<div class="particle" style="left:5%;animation-delay:0s;"></div>
-<div class="particle" style="left:15%;animation-delay:2s;"></div>
-<div class="particle" style="left:25%;animation-delay:4s;"></div>
-<div class="particle" style="left:38%;animation-delay:1s;"></div>
-<div class="particle" style="left:52%;animation-delay:3s;"></div>
-<div class="particle" style="left:65%;animation-delay:5s;"></div>
-<div class="particle" style="left:78%;animation-delay:2s;"></div>
-<div class="particle" style="left:90%;animation-delay:4s;"></div>
-
-
-<div class="main">
-
-  <!-- TOP -->
-
-  <div class="topbar">
-
-    <img class="logo" src="logo.png">
-
-    <div class="profile">
-
-      <div class="avatar">
-        👤
-      </div>
-
-      <div>
-
-        <div class="username">
-          RISHI
-        </div>
-
-        <div class="status">
-          ● ONLINE
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- CURRENCY -->
-
-  <div class="currency">
-
-    <div class="money">
-      🪙 1000
-    </div>
-
-    <div class="money">
-      💎 10
-    </div>
-
-  </div>
-
-
-  <!-- SIDE MENU -->
-
-  <div class="side-menu">
-
-    <button class="menu-btn" onclick="menuClick('SHOP')">
-      🛒 SHOP
-    </button>
-
-    <button class="menu-btn" onclick="menuClick('FRIENDS')">
-      👥 FRIENDS
-    </button>
-
-    <button class="menu-btn" onclick="menuClick('SETTINGS')">
-      ⚙ SETTINGS
-    </button>
-
-  </div>
-
-
-  <!-- CENTER -->
-
-  <div class="center">
-
-    <div id="threeDScene">
-
-      <div class="warzone-core"></div>
-
-    </div>
-
-    <div class="ready">
-      READY FOR BATTLE
-    </div>
-
-    <div class="subtitle">
-      ENTER THE WARZONE
-    </div>
-
-    <button class="play" onclick="startGame()">
-      ⚔ PLAY NOW
-    </button>
-
-  </div>
-
-
-  <!-- BOTTOM -->
-
-  <div class="bottom">
-
-    <div>
-      RM WARZONE
-    </div>
-
-    <div>
-      SEASON 01 • ONLINE
-    </div>
-
-  </div>
-
+<div id="boot"><div class="bootbox"><img class="bootlogo" src="logo.png"><div class="loader"><i></i></div><div class="boottxt">SECURE WARZONE SESSION</div></div></div>
+<div id="authGate" class="authGate"><div class="authCard"><img src="logo.png"><h2>VERIFYING PLAYER</h2><p>Checking your RM WARZONE account session...</p><div class="authSpin"></div></div></div>
+<div class="overlay"></div><div class="scanlines"></div>
+<div class="particle p1"></div><div class="particle p2"></div><div class="particle p3"></div><div class="particle p4"></div><div class="particle p5"></div><div class="particle p6"></div><div class="particle p7"></div><div class="particle p8"></div>
+<div class="main" id="lobbyApp" style="visibility:hidden">
+<header class="topbar"><img class="logo" src="logo.png" alt="RM WARZONE"><div class="topActions"><button class="iconBtn" onclick="openModal('newsModal')">◈ NEWS</button><button class="iconBtn" onclick="openPanel('profilePanel')">PROFILE</button></div><div class="profile" onclick="openPanel('profilePanel')"><div class="avatar">👤</div><div><div class="username" id="playerName">RISHI</div><div class="status">● ONLINE</div></div></div></header>
+<div class="currency"><div class="money"><span class="coin">🪙</span> <span id="coinValue">1000</span></div><div class="money"><span class="gem">💎</span> <span id="gemValue">10</span></div></div>
+<nav class="side-menu">
+<button class="menu-btn" onclick="openPanel('shopPanel')">🛒 SHOP <small>›</small></button>
+<button class="menu-btn" onclick="openModal('friendsModal')">👥 FRIENDS <small>6</small></button>
+<button class="menu-btn" onclick="openPanel('missionsPanel')">🎯 MISSIONS <small>3</small></button>
+<button class="menu-btn" onclick="openPanel('inventoryPanel')">🎒 INVENTORY <small>›</small></button>
+<button class="menu-btn" onclick="openPanel('seasonPanel')">🏆 SEASON 01 <small>68%</small></button>
+<button class="menu-btn" onclick="openPanel('settingsPanel')">⚙ SETTINGS <small>›</small></button>
+</nav>
+<main class="center"><div id="threeDScene"></div><div class="ready">READY FOR BATTLE</div><div class="subtitle">SEASON 01 • ONLINE WARZONE • SECURE SESSION</div><button class="play" id="playBtn" onclick="startGame()">⚔ PLAY NOW</button></main>
+<footer class="bottom"><div>RM WARZONE • BUILD 01.00</div><div><span class="serverDot">● SERVER ONLINE</span> &nbsp;•&nbsp; ASIA</div></footer>
 </div>
-
-
-<!-- SOUND -->
-
-<audio
-  id="clickSound"
-  src="https://www.soundjay.com/buttons/button-16.mp3">
-</audio>
-
-
+<!-- PROFILE -->
+<section class="panel" id="profilePanel"><div class="panelHead"><h2>PLAYER PROFILE</h2><button class="close" onclick="closePanels()">✕</button></div><div class="panelBody"><div class="card"><div class="row"><div><div class="muted">CALLSIGN</div><strong id="profileName">RISHI</strong></div><span class="badge">ONLINE</span></div><div class="muted" id="profileEmail">player account</div></div><div class="statGrid"><div class="stat"><b>01</b><span>LEVEL</span></div><div class="stat"><b>68%</b><span>SEASON XP</span></div><div class="stat"><b>0</b><span>VICTORIES</span></div><div class="stat"><b>0</b><span>ELIMINATIONS</span></div></div><div class="card"><h3>ACCOUNT SESSION</h3><div class="muted">Your login session is protected by Firebase Authentication.</div><button class="action" style="margin-top:10px" onclick="logout()">LOG OUT</button></div></div></section>
+<!-- SHOP -->
+<section class="panel" id="shopPanel"><div class="panelHead"><h2>WARZONE SHOP</h2><button class="close" onclick="closePanels()">✕</button></div><div class="panelBody"><div class="notice">Virtual shop only. Items use in-game currency. No real-money withdrawal or gambling system is included.</div><div class="card"><div class="row"><div><h3>RAVEN WEAPON SKIN</h3><div class="muted">Cosmetic • Season 01</div></div><button class="action" onclick="buyItem('Raven Skin',250)">🪙 250</button></div></div><div class="card"><div class="row"><div><h3>RED ARMOR PACK</h3><div class="muted">Cosmetic armor style</div></div><button class="action" onclick="buyItem('Red Armor',400)">🪙 400</button></div></div><div class="card"><div class="row"><div><h3>SUPPLY CRATE</h3><div class="muted">Random virtual cosmetic item</div></div><button class="action" onclick="buyItem('Supply Crate',150)">🪙 150</button></div></div></div></section>
+<!-- MISSIONS -->
+<section class="panel" id="missionsPanel"><div class="panelHead"><h2>MISSIONS</h2><button class="close" onclick="closePanels()">✕</button></div><div class="panelBody"><div class="card"><div class="row"><h3>FIRST DROP</h3><span class="badge">ACTIVE</span></div><div class="muted">Play 1 match</div><div class="progress"><i style="width:0%"></i></div><div class="muted" style="margin-top:6px">Reward: 🪙 100</div></div><div class="card"><div class="row"><h3>SHARP SHOOTER</h3><span class="badge">ACTIVE</span></div><div class="muted">Land 10 hits</div><div class="progress"><i style="width:0%"></i></div><div class="muted" style="margin-top:6px">Reward: 🪙 150</div></div><div class="card"><div class="row"><h3>WEEKLY RUN</h3><span class="badge">LOCKED</span></div><div class="muted">Win 3 matches</div></div></div></section>
+<!-- INVENTORY -->
+<section class="panel" id="inventoryPanel"><div class="panelHead"><h2>INVENTORY</h2><button class="close" onclick="closePanels()">✕</button></div><div class="panelBody"><div class="card"><h3>EQUIPPED LOADOUT</h3><div class="listItem"><div class="miniAvatar">🔫</div><div class="grow"><strong>STANDARD RIFLE</strong><small>Primary weapon</small></div><span class="badge">EQUIPPED</span></div><div class="listItem"><div class="miniAvatar">🛡️</div><div class="grow"><strong>TACTICAL SHIELD</strong><small>Defense skill</small></div><span class="badge">READY</span></div></div><div class="card"><h3>COSMETICS</h3><div class="listItem"><div class="miniAvatar">🎨</div><div class="grow"><strong>DEFAULT WARZONE</strong><small>Character style</small></div></div></div></div></section>
+<!-- SEASON -->
+<section class="panel" id="seasonPanel"><div class="panelHead"><h2>SEASON 01</h2><button class="close" onclick="closePanels()">✕</button></div><div class="panelBody"><div class="card"><div class="row"><div><div class="muted">SEASON LEVEL</div><div class="bigNum">01</div></div><span class="badge">ACTIVE</span></div><div class="muted">Season progress</div><div class="progress" style="margin-top:8px"><i style="width:68%"></i></div><div class="muted" style="margin-top:8px">680 / 1000 XP</div></div><div class="card"><h3>UPCOMING REWARDS</h3><div class="listItem"><div class="miniAvatar">🎁</div><div class="grow"><strong>LEVEL 02</strong><small>Virtual coin reward</small></div></div><div class="listItem"><div class="miniAvatar">🏷️</div><div class="grow"><strong>LEVEL 03</strong><small>Profile badge</small></div></div></div></div></section>
+<!-- SETTINGS -->
+<section class="panel" id="settingsPanel"><div class="panelHead"><h2>SETTINGS</h2><button class="close" onclick="closePanels()">✕</button></div><div class="panelBody"><div class="card"><h3>GAMEPLAY</h3><div class="row"><span class="muted">Hit effects</span><div class="switch on" id="hitSwitch" onclick="toggleSwitch(this)"><i></i></div></div><div class="row"><span class="muted">Screen shake</span><div class="switch on" onclick="toggleSwitch(this)"><i></i></div></div><div class="row"><span class="muted">Auto quality</span><div class="switch on" onclick="toggleSwitch(this)"><i></i></div></div></div><div class="card"><h3>AUDIO</h3><div class="row"><span class="muted">UI sounds</span><div class="switch on" onclick="toggleSwitch(this)"><i></i></div></div><div class="row"><span class="muted">Music</span><div class="switch on" onclick="toggleSwitch(this)"><i></i></div></div></div><div class="card"><h3>SESSION</h3><div class="muted">Account: <span id="settingsEmail">—</span></div><button class="action" style="margin-top:10px" onclick="logout()">LOG OUT</button></div></div></section>
+<!-- FRIENDS -->
+<div class="modal" id="friendsModal"><div class="modalBox"><div class="modalHead"><h2>FRIENDS</h2><button class="close" onclick="closeModal('friendsModal')">✕</button></div><div class="modalContent"><div class="tabs"><button class="tab selected">ONLINE 3</button><button class="tab">ALL 6</button></div><div class="listItem"><div class="miniAvatar">🟢</div><div class="grow"><strong>Player45</strong><small>In Lobby</small></div><button class="action" onclick="toast('Invite sent')">INVITE</button></div><div class="listItem"><div class="miniAvatar">🔵</div><div class="grow"><strong>SniperX</strong><small>In Match</small></div><span class="badge">PLAYING</span></div><div class="listItem"><div class="miniAvatar">🟢</div><div class="grow"><strong>Ghost</strong><small>Online</small></div><button class="action" onclick="toast('Invite sent')">INVITE</button></div><div class="notice" style="margin-top:12px">Friends are currently represented as lobby data. Full real-time multiplayer/friend synchronization will be connected through the multiplayer backend later.</div></div></div></div>
+<!-- NEWS -->
+<div class="modal" id="newsModal"><div class="modalBox"><div class="modalHead"><h2>WARZONE NEWS</h2><button class="close" onclick="closeModal('newsModal')">✕</button></div><div class="modalContent"><div class="card"><div class="newsTag">SEASON 01</div><h3 style="margin:5px 0">THE WARZONE OPENS</h3><div class="muted">The official RM WARZONE lobby is now online. More weapons, missions, maps and multiplayer systems are planned for future builds.</div></div><div class="card"><div class="newsTag">SYSTEM</div><h3 style="margin:5px 0">ACCOUNT SECURITY</h3><div class="muted">Player sessions are protected through Firebase Authentication.</div></div></div></div></div>
+<div class="toast" id="toast"></div>
+<audio id="clickSound" src="https://www.soundjay.com/buttons/button-16.mp3"></audio>
 <script>
-
-function playSound(){
-
-  let sound=document.getElementById("clickSound");
-
-  sound.currentTime=0;
-
-  sound.play().catch(()=>{});
-
+const firebaseConfig={apiKey:'AIzaSyArnIKZ8odykhlwMDBjXVOyTOpCXXFnNBk4',authDomain:'rmuniverse120824.firebaseapp.com',projectId:'rmuniverse120824',appId:'1:338852799104:web:1dc2b2fb99e84db9503c65'};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth();
+let db=null;try{db=firebase.firestore()}catch(e){}
+let currentUser=null,coins=1000,gems=10;
+const $=id=>document.getElementById(id);
+function playSound(){const s=$('clickSound');if(s){s.currentTime=0;s.play().catch(()=>{})}}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove('show'),2200)}
+function openPanel(id){playSound();document.querySelectorAll('.panel').forEach(p=>p.classList.remove('open'));$(id).classList.add('open')}
+function closePanels(){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('open'))}
+function openModal(id){playSound();$(id).classList.add('show')}
+function closeModal(id){$(id).classList.remove('show')}
+function toggleSwitch(el){el.classList.toggle('on');playSound();toast(el.classList.contains('on')?'Setting enabled':'Setting disabled')}
+function displayUser(user){currentUser=user;let name=user.displayName||((user.email||'RISHI').split('@')[0]);name=name.slice(0,18);$('playerName').textContent=name.toUpperCase();$('profileName').textContent=name.toUpperCase();$('profileEmail').textContent=user.email||'Google account';$('settingsEmail').textContent=user.email||'Google account'}
+function loadLocalData(){try{coins=Number(localStorage.getItem('rmCoins')||1000);gems=Number(localStorage.getItem('rmGems')||10)}catch(e){}$('coinValue').textContent=coins;$('gemValue').textContent=gems}
+function saveLocalData(){try{localStorage.setItem('rmCoins',coins);localStorage.setItem('rmGems',gems)}catch(e){}}
+function buyItem(name,cost){playSound();if(coins<cost){toast('Not enough virtual coins');return}coins-=cost;saveLocalData();$('coinValue').textContent=coins;toast(name+' added to inventory • 🪙 -'+cost)}
+function logout(){playSound();auth.signOut().then(()=>window.location.replace('index.html')).catch(()=>window.location.replace('index.html'))}
+function startGame(){if(!currentUser){window.location.replace('index.html');return}playSound();const b=$('playBtn');b.textContent='⏳ ENTERING WARZONE...';b.disabled=true;toast('Secure session confirmed');setTimeout(()=>window.location.href='dashboard.html',1500)}
+/* Firebase login gate: lobby cannot be opened as an anonymous page. */
+auth.onAuthStateChanged(user=>{if(!user){window.location.replace('index.html');return}displayUser(user);loadLocalData();$('authGate').classList.add('hide');$('lobbyApp').style.visibility='visible';setTimeout(()=>$('boot').classList.add('hide'),350)});
+/* Close panels when clicking outside */
+document.addEventListener('click',e=>{if(e.target.classList.contains('modal'))e.target.classList.remove('show')});
+/* THREE.JS WARZONE CORE */
+let scene,camera,renderer,sphere,ring,ring2,warParticles,balls=[];
+function init3D(){
+const holder=$('threeDScene');scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(60,holder.clientWidth/holder.clientHeight,.1,1000);camera.position.z=6;
+renderer=new THREE.WebGLRenderer({alpha:true,antialias:true});renderer.setSize(holder.clientWidth,holder.clientHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2));holder.appendChild(renderer.domElement);
+scene.add(new THREE.AmbientLight(0x222222,1.2));const light=new THREE.PointLight(0xff2222,3,100);light.position.set(2,3,4);scene.add(light);const blue=new THREE.PointLight(0x2244ff,2,100);blue.position.set(-3,-2,3);scene.add(blue);
+const sg=new THREE.IcosahedronGeometry(1.45,2);const sm=new THREE.MeshStandardMaterial({color:0x550000,emissive:0x220000,metalness:.8,roughness:.25});sphere=new THREE.Mesh(sg,sm);scene.add(sphere);
+const rg=new THREE.TorusGeometry(2,.035,16,100);ring=new THREE.Mesh(rg,new THREE.MeshBasicMaterial({color:0xff2222}));ring.rotation.x=Math.PI/2;scene.add(ring);
+ring2=new THREE.Mesh(new THREE.TorusGeometry(2.25,.025,16,100),new THREE.MeshBasicMaterial({color:0x2266ff}));ring2.rotation.y=Math.PI/3;scene.add(ring2);
+const bg=new THREE.BufferGeometry(),pos=new Float32Array(270*3);for(let i=0;i<270;i++){pos[i*3]=(Math.random()-.5)*12;pos[i*3+1]=(Math.random()-.5)*8;pos[i*3+2]=(Math.random()-.5)*8}bg.setAttribute('position',new THREE.BufferAttribute(pos,3));warParticles=new THREE.Points(bg,new THREE.PointsMaterial({color:0xff2222,size:.035,transparent:true,opacity:.8}));scene.add(warParticles);
+const ballGeo=new THREE.SphereGeometry(.08,12,12),ballMat=new THREE.MeshBasicMaterial({color:0xff3333});for(let i=0;i<18;i++){let b=new THREE.Mesh(ballGeo,ballMat),a=i/18*Math.PI*2;b.position.set(Math.cos(a)*2.7,Math.sin(a)*2.7,(Math.random()-.5)*1.5);scene.add(b);balls.push(b)}
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshStandardMaterial({color:0x080808,metalness:.5,roughness:.8}));ground.rotation.x=-Math.PI/2;ground.position.y=-1.8;scene.add(ground);const grid=new THREE.GridHelper(20,20,0xff2222,0x222222);grid.position.y=-1.78;scene.add(grid);scene.fog=new THREE.FogExp2(0x050505,.08);
+let mx=0,my=0;document.addEventListener('mousemove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+function animate(){requestAnimationFrame(animate);sphere.rotation.x+=.004;sphere.rotation.y+=.008+mx*.01;sphere.rotation.x+=my*.01;warParticles.rotation.y+=.0008;warParticles.rotation.x+=.0003;ring.rotation.z+=.012;ring.rotation.y+=mx*.005;ring2.rotation.x+=.008+my*.005;ring2.rotation.z-=.006;balls.forEach((b,i)=>{let a=Date.now()*.001+i;b.position.y=Math.sin(a)*2.5;b.position.x=Math.cos(a)*2.5});renderer.render(scene,camera)}animate();
+window.addEventListener('resize',()=>{const w=holder.clientWidth,h=holder.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)});
 }
-
-
-function startGame(){
-
-  playSound();
-
-  const button =
-    document.querySelector(".play");
-
-  button.innerText =
-    "⏳ ENTERING WARZONE...";
-
-  button.disabled = true;
-
-  button.style.opacity = "0.7";
-
-  setTimeout(function(){
-
-    window.location.href =
-      "dashboard.html";
-
-  },1500);
-
-}
-
-function menuClick(name){
-
-  playSound();
-
-  alert(name+" system coming soon ⚔️");
-
-}
-
-</script>
-<script>
-
-const scene = new THREE.Scene();
-
-const camera = new THREE.PerspectiveCamera(
-  60,
-  360 / 300,
-  0.1,
-  1000
-);
-
-const renderer = new THREE.WebGLRenderer({
-  alpha:true,
-  antialias:true
-});
-
-renderer.setSize(360,300);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-
-document.getElementById("threeDScene").appendChild(
-  renderer.domElement
-);
-
-
-/* REMOVE TEMPORARY CORE */
-
-const oldCore = document.querySelector(".warzone-core");
-
-if(oldCore){
-  oldCore.remove();
-}
-
-
-/* LIGHT */
-
-const light = new THREE.PointLight(
-  0xff2222,
-  3,
-  100
-);
-
-light.position.set(2,3,4);
-
-scene.add(light);
-
-
-/* SECOND LIGHT */
-
-const blueLight = new THREE.PointLight(
-  0x2244ff,
-  2,
-  100
-);
-
-blueLight.position.set(-3,-2,3);
-
-scene.add(blueLight);
-
-
-/* MAIN WARZONE SPHERE */
-
-const sphereGeometry =
-  new THREE.IcosahedronGeometry(1.45,2);
-
-const sphereMaterial =
-  new THREE.MeshStandardMaterial({
-    color:0x550000,
-    emissive:0x220000,
-    metalness:0.8,
-    roughness:0.25
-  });
-
-const sphere =
-  new THREE.Mesh(
-    sphereGeometry,
-    sphereMaterial
-  );
-
-scene.add(sphere);
-
-
-/* OUTER RING */
-
-const ringGeometry =
-  new THREE.TorusGeometry(
-    2,
-    0.035,
-    16,
-    100
-  );
-
-const ringMaterial =
-  new THREE.MeshBasicMaterial({
-    color:0xff2222
-  });
-
-const ring =
-  new THREE.Mesh(
-    ringGeometry,
-    ringMaterial
-  );
-
-ring.rotation.x =
-  Math.PI / 2;
-
-scene.add(ring);
-
-
-/* SECOND RING */
-
-const ring2 =
-  new THREE.Mesh(
-    new THREE.TorusGeometry(
-      2.25,
-      0.025,
-      16,
-      100
-    ),
-    new THREE.MeshBasicMaterial({
-      color:0x2266ff
-    })
-  );
-
-ring2.rotation.y =
-  Math.PI / 3;
-
-scene.add(ring2);
-
-
-/* SMALL ENERGY BALLS */
-
-const ballGeometry =
-  new THREE.SphereGeometry(
-    0.08,
-    12,
-    12
-  );
-
-const ballMaterial =
-  new THREE.MeshBasicMaterial({
-    color:0xff3333
-  });
-/* WARZONE PARTICLES */
-
-const particleGeometry =
-  new THREE.BufferGeometry();
-
-const particleCount = 250;
-
-const particlePositions =
-  new Float32Array(particleCount * 3);
-
-for(let i = 0; i < particleCount; i++){
-
-  particlePositions[i * 3] =
-    (Math.random() - 0.5) * 12;
-
-  particlePositions[i * 3 + 1] =
-    (Math.random() - 0.5) * 8;
-
-  particlePositions[i * 3 + 2] =
-    (Math.random() - 0.5) * 8;
-
-}
-
-particleGeometry.setAttribute(
-  "position",
-  new THREE.BufferAttribute(
-    particlePositions,
-    3
-  )
-);
-
-const particleMaterial =
-  new THREE.PointsMaterial({
-    color:0xff2222,
-    size:0.035,
-    transparent:true,
-    opacity:0.8
-  });
-
-const warParticles =
-  new THREE.Points(
-    particleGeometry,
-    particleMaterial
-  );
-
-scene.add(warParticles);
-const balls=[];
-
-for(let i=0;i<18;i++){
-
-  const ball =
-    new THREE.Mesh(
-      ballGeometry,
-      ballMaterial
-    );
-
-  const angle =
-    (i/18)*Math.PI*2;
-
-  ball.position.x =
-    Math.cos(angle)*2.7;
-
-  ball.position.y =
-    Math.sin(angle)*2.7;
-
-  ball.position.z =
-    (Math.random()-0.5)*1.5;
-
-  scene.add(ball);
-
-  balls.push(ball);
-}
-
-
-/* CAMERA */
-
-camera.position.z = 6;
-/* WARZONE GROUND */
-
-const groundGeometry =
-  new THREE.PlaneGeometry(20,20);
-
-const groundMaterial =
-  new THREE.MeshStandardMaterial({
-    color:0x080808,
-    metalness:0.5,
-    roughness:0.8
-  });
-
-const ground =
-  new THREE.Mesh(
-    groundGeometry,
-    groundMaterial
-  );
-
-ground.rotation.x =
-  -Math.PI / 2;
-
-ground.position.y =
-  -1.8;
-
-scene.add(ground);
-
-
-/* WARZONE GRID */
-
-const grid =
-  new THREE.GridHelper(
-    20,
-    20,
-    0xff2222,
-    0x222222
-  );
-
-grid.position.y =
-  -1.78;
-
-scene.add(grid);
-
-
-/* FOG */
-
-scene.fog =
-  new THREE.FogExp2(
-    0x050505,
-    0.08
-  );
-
-/* ANIMATION */
-/* MOUSE CONTROL */
-
-let mouseX = 0;
-let mouseY = 0;
-
-document.addEventListener("mousemove", function(event){
-
-  mouseX =
-    (event.clientX / window.innerWidth) - 0.5;
-
-  mouseY =
-    (event.clientY / window.innerHeight) - 0.5;
-
-});
-function animate(){
-
-  requestAnimationFrame(animate);
-
-  sphere.rotation.x += 0.004;
-  warParticles.rotation.y += 0.0008;
-warParticles.rotation.x += 0.0003;
-  sphere.rotation.y += 0.008;
-sphere.rotation.y += mouseX * 0.01;
-sphere.rotation.x += mouseY * 0.01;
-
-ring.rotation.y += mouseX * 0.005;
-ring2.rotation.x += mouseY * 0.005;
-  ring.rotation.z += 0.012;
-
-  ring2.rotation.x += 0.008;
-  ring2.rotation.z -= 0.006;
-
-  balls.forEach((ball,index)=>{
-
-    const angle =
-      Date.now()*0.001 +
-      index;
-
-    ball.position.y =
-      Math.sin(angle)*2.5;
-
-    ball.position.x =
-      Math.cos(angle)*2.5;
-
-  });
-
-  renderer.render(
-    scene,
-    camera
-  );
-
-}
-
-animate();
-
-
-/* RESIZE */
-
-window.addEventListener(
-  "resize",
-  function(){
-
-    const width =
-      document.getElementById(
-        "threeDScene"
-      ).clientWidth;
-
-    const height =
-      document.getElementById(
-        "threeDScene"
-      ).clientHeight;
-
-    camera.aspect =
-      width / height;
-
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(
-      width,
-      height
-    );
-
-  }
-);
-
+window.addEventListener('load',()=>setTimeout(init3D,80));
 </script>
 </body>
 </html>
